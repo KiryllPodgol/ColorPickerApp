@@ -1,0 +1,6 @@
+@ColorPickerApp_HostAddress = http://localhost:5263
+
+GET {{ColorPickerApp_HostAddress}}/Color/
+Accept: application/json
+
+###
