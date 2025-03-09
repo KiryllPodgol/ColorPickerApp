@@ -745,23 +745,24 @@
                 // Нормализуем расстояние (от 0 до 1)
                 const normDistance = clampedDistance / radius;
 
-                // Вычисляем угол
+                // Вычисляем угол в радианах
                 let angle = Math.atan2(y, x);
 
+                // Корректируем угол: 0° теперь будет сверху (красный)
+                let hue = ((angle * 180 / Math.PI) + 90) % 360;
+                hue = (hue + 360) % 360;
+                // if (hue < 0 || isNaN(hue)) hue += 360;
+
                 // Вычисляем позицию селектора относительно центра круга
-                const selectorPosX = (clampedDistance * Math.cos(angle)) / radius * 50; 
-                const selectorPosY = (clampedDistance * Math.sin(angle)) / radius * 50; 
+                const selectorPosX = (clampedDistance * Math.cos(angle)) / radius * 50;
+                const selectorPosY = (clampedDistance * Math.sin(angle)) / radius * 50;
 
                 colorSelector.style.left = `calc(50% + ${selectorPosX}%)`;
                 colorSelector.style.top = `calc(50% + ${selectorPosY}%)`;
 
-                // Преобразуем полярные координаты в HSV
-                // Угол: 0° = красный, 120° = зеленый, 240° = синий
-                let hue = ((angle * 180 / Math.PI) + 180) % 360;
+                // Преобразуем HSV в RGB
                 let saturation = normDistance;
                 let value = 1.0;
-
-                // Конвертируем HSV в RGB, затем в HEX
                 const rgb = hsvToRgb(hue, saturation, value);
                 const hex = rgbToHex(rgb[0], rgb[1], rgb[2]);
 
