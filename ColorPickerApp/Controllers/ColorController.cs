@@ -22,23 +22,24 @@ namespace ColorPickerApp.Controllers
             List<string> palette = ColorService.GeneratePalette(baseColor);
             return View(palette);
         }
-        public IActionResult ExportToHtml(string[] colors)
+        public IActionResult ExportToHtml(string colors)
         {
-            var fileContent = _colorExportService.ExportToHtml(colors);
+            var colorArray = colors.Split(','); // Разделяем строку на массив
+            var fileContent = _colorExportService.ExportToHtml(colorArray);
             return File(fileContent, "text/html", "palette.html");
         }
 
-        // Экспорт в ACO
-        public IActionResult ExportToAco(string[] colors)
+        public IActionResult ExportToAco(string colors)
         {
-            var fileContent = _colorExportService.ExportToAco(colors);
+            var colorArray = colors.Split(','); // Разделяем строку на массив
+            var fileContent = _colorExportService.ExportToAco(colorArray);
             return File(fileContent, "application/octet-stream", "palette.aco");
         }
 
-        // Экспорт в GPL
-        public IActionResult ExportToGpl(string[] colors)
+        public IActionResult ExportToGpl(string colors)
         {
-            var fileContent = _colorExportService.ExportToGpl(colors);
+            var colorArray = colors.Split(','); // Разделяем строку на массив
+            var fileContent = _colorExportService.ExportToGpl(colorArray);
             return File(fileContent, "text/plain", "palette.gpl");
         }
     }

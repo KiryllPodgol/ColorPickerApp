@@ -8,10 +8,10 @@ namespace ColorPickerApp.Services
         {
             var htmlContent = new StringBuilder();
             htmlContent.AppendLine("<!DOCTYPE html>");
-            htmlContent.AppendLine("<html lang=\"en\">");
+            htmlContent.AppendLine("<html lang=\"ru\">");
             htmlContent.AppendLine("<head>");
             htmlContent.AppendLine("<meta charset=\"UTF-8\">");
-            htmlContent.AppendLine("<title>Color Palette</title>");
+            htmlContent.AppendLine("<title>Цветовая палитра</title>");
             htmlContent.AppendLine("<style>");
             htmlContent.AppendLine("body { font-family: Arial, sans-serif; }");
             htmlContent.AppendLine("table { width: 100%; border-collapse: collapse; }");
@@ -19,7 +19,7 @@ namespace ColorPickerApp.Services
             htmlContent.AppendLine("</style>");
             htmlContent.AppendLine("</head>");
             htmlContent.AppendLine("<body>");
-            htmlContent.AppendLine("<h1>Color Palette</h1>");
+            htmlContent.AppendLine("<h1>Цветовая палитра</h1>");
             htmlContent.AppendLine("<table>");
             foreach (var color in colors)
             {
@@ -31,6 +31,7 @@ namespace ColorPickerApp.Services
 
             return Encoding.UTF8.GetBytes(htmlContent.ToString());
         }
+
 
         // Экспорт в ACO (Photoshop)
         public byte[] ExportToAco(string[] colors)

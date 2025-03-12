@@ -1379,18 +1379,18 @@
             }
         }
         function exportToHtml() {
-            const colors = @Json.Serialize(Model);
-            window.location.href = `/Color/ExportToHtml?colors=${encodeURIComponent(colors)}`;
+            const colors = currentPalette; // Используем текущую палитру
+            window.location.href = `/Color/ExportToHtml?colors=${encodeURIComponent(colors.join(','))}`;
         }
 
         function exportToAco() {
-            const colors = @Json.Serialize(Model);
-            window.location.href = `/Color/ExportToAco?colors=${encodeURIComponent(colors)}`;
+            const colors = currentPalette; // Используем текущую палитру
+            window.location.href = `/Color/ExportToAco?colors=${encodeURIComponent(colors.join(','))}`;
         }
 
         function exportToGpl() {
-            const colors = @Json.Serialize(Model);
-            window.location.href = `/Color/ExportToGpl?colors=${encodeURIComponent(colors)}`;
+            const colors = currentPalette; // Используем текущую палитру
+            window.location.href = `/Color/ExportToGpl?colors=${encodeURIComponent(colors.join(','))}`;
         }
         // Начальная загрузка истории
         function loadHistory() {
