@@ -1,483 +1,624 @@
-﻿@model List<string>
+﻿ 
 
-<!DOCTYPE html>
-<html lang="ru">
+    <!DOCTYPE html>
+    <html lang="ru">
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Генератор цветовой палитры</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        :root {
-            --primary-color: #3498db;
-            --secondary-color: #2ecc71;
-            --accent-color: #e74c3c;
-            --background-color: #f5f5f5;
-            --text-color: #333333;
-            --light-text-color: #ffffff;
-        }
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Генератор цветовой палитры</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        <style>
+                    :root {
+                        --primary-color: #3498db;
+                        --secondary-color: #2ecc71;
+                        --accent-color: #e74c3c;
+                        --background-color: #f5f5f5;
+                        --text-color: #333333;
+                        --light-text-color: #ffffff;
+                    }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            transition: all 0.5s;
-        }
+                    body {
+                        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                        margin: 0;
+                        padding: 0;
+                        background-color: var(--background-color);
+                        color: var(--text-color);
+                        transition: all 0.5s;
+                    }
 
-        .app-container {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
+                    .app-container {
+                        display: flex;
+                        flex-direction: column;
+                        min-height: 100vh;
+                    }
 
-        header {
-            background-color: var(--primary-color);
-            padding: 1rem;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
+                    header {
+                        background-color: var(--primary-color);
+                        padding: 1rem;
+                        text-align: center;
+                        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                    }
 
-        header h1 {
-            color: #ffffff !important; /* Всегда белый цвет для заголовка */
-            margin: 0;
-        }
+                    header h1 {
+                        color: #ffffff !important; /* Всегда белый цвет для заголовка */
+                        margin: 0;
+                    }
 
-        main {
-            flex: 1;
-            padding: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-            width: 100%;
-            box-sizing: border-box;
-        }
+                    main {
+                        flex: 1;
+                        padding: 2rem;
+                        max-width: 1200px;
+                        margin: 0 auto;
+                        width: 100%;
+                        box-sizing: border-box;
+                    }
 
-        .card {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-        }
+                    .card {
+                        background-color: white;
+                        border-radius: 8px;
+                        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+                        padding: 1.5rem;
+                        margin-bottom: 2rem;
+                    }
 
-        h1, h2, h3 {
-            margin-top: 0;
-            color: var(--primary-color);
-        }
+                    h1, h2, h3 {
+                        margin-top: 0;
+                        color: var(--primary-color);
+                    }
 
-        .form-group {
-            margin-bottom: 1rem;
-        }
+                    .form-group {
+                        margin-bottom: 1rem;
+                    }
 
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
+                    label {
+                        display: block;
+                        margin-bottom: 0.5rem;
+                        font-weight: 500;
+                    }
 
-        input[type="text"], input[type="file"] {
-            padding: 0.75rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            width: 100%;
-            max-width: 300px;
-            font-size: 1rem;
-            box-sizing: border-box;
-        }
+                    input[type="text"], input[type="file"] {
+                        padding: 0.75rem;
+                        border: 1px solid #ddd;
+                        border-radius: 4px;
+                        width: 100%;
+                        max-width: 300px;
+                        font-size: 1rem;
+                        box-sizing: border-box;
+                    }
 
-        button {
-            background-color: var(--secondary-color);
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 4px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
-        }
+                    button {
+                        background-color: var(--secondary-color);
+                        color: white;
+                        border: none;
+                        padding: 0.75rem 1.5rem;
+                        border-radius: 4px;
+                        font-size: 1rem;
+                        cursor: pointer;
+                        transition: background-color 0.3s, transform 0.2s;
+                    }
 
-        button:hover {
-            background-color: var(--accent-color);
-            transform: translateY(-2px);
-        }
+                    button:hover {
+                        background-color: var(--accent-color);
+                        transform: translateY(-2px);
+                    }
 
-        .palette-actions button {
-            background-color: var(--secondary-color);
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 4px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
-            margin-right: 10px;
-        }
+                    .palette-actions button {
+                        background-color: var(--secondary-color);
+                        color: white;
+                        border: none;
+                        padding: 0.75rem 1.5rem;
+                        border-radius: 4px;
+                        font-size: 1rem;
+                        cursor: pointer;
+                        transition: background-color 0.3s, transform 0.2s;
+                        margin-right: 10px;
+                    }
 
-            .palette-actions button:hover {
-                background-color: var(--accent-color);
-                transform: translateY(-2px);
+                        .palette-actions button:hover {
+                            background-color: var(--accent-color);
+                            transform: translateY(-2px);
+                        }
+
+
+                    .palette-container {
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 15px;
+                        margin: 1.5rem 0;
+                    }
+
+                    .color-box {
+                        width: 80px;
+                        height: 80px;
+                        border-radius: 8px;
+                        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                        cursor: pointer;
+                        position: relative;
+                        overflow: hidden;
+                        transition: transform 0.3s;
+                    }
+
+                    .color-box:hover {
+                        transform: scale(1.1);
+                        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                    }
+
+                    .color-code {
+                        position: absolute;
+                        bottom: 0;
+                        left: 0;
+                        right: 0;
+                        background-color: rgba(0,0,0,0.6);
+                        color: white;
+                        font-size: 0.8rem;
+                        padding: 4px;
+                        text-align: center;
+                        opacity: 0;
+                        transition: opacity 0.3s;
+                    }
+
+                    .color-box:hover .color-code {
+                        opacity: 1;
+                    }
+
+                    .color-actions {
+                        position: absolute;
+                        top: 5px;
+                        right: 5px;
+                        display: flex;
+                        gap: 5px;
+                        opacity: 0;
+                        transition: opacity 0.3s;
+                    }
+
+                    .color-box:hover .color-actions {
+                        opacity: 1;
+                    }
+
+                    .color-action-btn {
+                        background: rgba(255, 255, 255, 0.7);
+                        border-radius: 50%;
+                        width: 24px;
+                        height: 24px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        cursor: pointer;
+                        font-size: 12px;
+                        color: #333;
+                        transition: all 0.2s;
+                    }
+
+                    .color-action-btn:hover {
+                        background: rgba(255, 255, 255, 0.9);
+                        transform: scale(1.1);
+                    }
+
+                    .preview-section {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 1rem;
+                    }
+
+                    .preview-container {
+                        border: 1px solid #ddd;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                    }
+
+                    .preview-header {
+                        background-color: var(--primary-color);
+                        padding: 1rem;
+                        color: var(--light-text-color);
+                    }
+
+                    .preview-sidebar {
+                        background-color: var(--secondary-color);
+                        color: var(--light-text-color);
+                        width: 200px;
+                        padding: 1rem;
+                    }
+
+                    .preview-content {
+                        padding: 1rem;
+                    }
+
+                    .preview-button {
+                        background-color: var(--accent-color);
+                        color: var(--light-text-color);
+                        border: none;
+                        padding: 0.5rem 1rem;
+                        border-radius: 4px;
+                        cursor: pointer;
+                    }
+
+                    .preview-layout {
+                        display: flex;
+                    }
+
+                    .preview-main {
+                        flex: 1;
+                    }
+
+                    footer {
+                        background-color: var(--primary-color);
+                        color: var(--light-text-color);
+                        text-align: center;
+                        padding: 1rem;
+                        margin-top: 2rem;
+                    }
+
+                    /* Круговая палитра */
+                    .color-wheel-container {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        flex-direction: column;
+                        margin: 20px 0;
+                    }
+
+                    .color-wheel {
+                        position: relative;
+                        width: 250px;
+                        height: 250px;
+                        border-radius: 50%;
+                        margin-bottom: 20px;
+                        background: radial-gradient(circle, white, transparent), conic-gradient( from 0deg, red, yellow, lime, cyan, blue, magenta, red );
+                        cursor: crosshair;
+                        box-shadow: 0 0 10px rgba(0,0,0,0.2);
+                    }
+
+                    .color-wheel-selector {
+                        position: absolute;
+                        width: 20px;
+                        height: 20px;
+                        border-radius: 50%;
+                        border: 2px solid white;
+                        box-shadow: 0 0 5px rgba(0,0,0,0.5);
+                        transform: translate(-50%, -50%);
+                        pointer-events: none;
+                        left: 50%;
+                        top: 50%;
             }
 
 
-        .palette-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin: 1.5rem 0;
-        }
+                    .color-preview {
+                        width: 80px;
+                        height: 80px;
+                        border-radius: 8px;
+                        border: 2px solid #ddd;
+                        margin-top: 10px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-weight: bold;
+                        color: white;
+                        text-shadow: 0 0 2px rgba(0,0,0,0.8);
+                        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                    }
 
-        .color-box {
-            width: 80px;
-            height: 80px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.3s;
-        }
+                    /* История палитр */
+                    .history-title {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                    }
 
-        .color-box:hover {
-            transform: scale(1.1);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
+                    .history-title button {
+                        padding: 0.4rem 0.8rem;
+                        font-size: 0.9rem;
+                    }
 
-        .color-code {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background-color: rgba(0,0,0,0.6);
-            color: white;
-            font-size: 0.8rem;
-            padding: 4px;
-            text-align: center;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
+                    .history-palettes {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 15px;
+                        margin-top: 10px;
+                    }
 
-        .color-box:hover .color-code {
-            opacity: 1;
-        }
+                    .history-item {
+                        display: flex;
+                        background-color: #f9f9f9;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        cursor: pointer;
+                        transition: transform 0.2s;
+                        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                    }
 
-        .color-actions {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            display: flex;
-            gap: 5px;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
+                    .history-item:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+                    }
 
-        .color-box:hover .color-actions {
-            opacity: 1;
-        }
+                    .history-color {
+                        flex: 1;
+                        height: 40px;
+                    }
 
-        .color-action-btn {
-            background: rgba(255, 255, 255, 0.7);
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 12px;
-            color: #333;
-            transition: all 0.2s;
-        }
+                    .history-timestamp {
+                        font-size: 0.8rem;
+                        color: #888;
+                        margin-bottom: 5px;
+                    }
 
-        .color-action-btn:hover {
-            background: rgba(255, 255, 255, 0.9);
-            transform: scale(1.1);
-        }
+                    /* Меню выбора элемента */
+                    .target-selector {
+                        margin: 1rem 0;
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 10px;
+                    }
 
-        .preview-section {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
+                    .target-option {
+                        padding: 5px 10px;
+                        background: #f0f0f0;
+                        border-radius: 4px;
+                        cursor: pointer;
+                        border: 1px solid #ddd;
+                        transition: all 0.2s;
+                    }
 
-        .preview-container {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
+                    .target-option.active {
+                        background: var(--primary-color);
+                        color: white;
+                        border-color: var(--primary-color);
+                    }
 
-        .preview-header {
-            background-color: var(--primary-color);
-            padding: 1rem;
-            color: var(--light-text-color);
-        }
+                    .target-option:hover:not(.active) {
+                        background: #e0e0e0;
+                    }
 
-        .preview-sidebar {
-            background-color: var(--secondary-color);
-            color: var(--light-text-color);
-            width: 200px;
-            padding: 1rem;
-        }
+                    /* Кнопки действий с палитрой */
+                    .palette-actions {
+                        display: flex;
+                        gap: 10px;
+                        margin-top: 15px;
+                    }
 
-        .preview-content {
-            padding: 1rem;
-        }
+                    /* Всплывающее уведомление */
+                    .toast {
+                        position: fixed;
+                        bottom: 20px;
+                        right: 20px;
+                        background: rgba(0, 0, 0, 0.8);
+                        color: white;
+                        padding: 10px 20px;
+                        border-radius: 4px;
+                        z-index: 1000;
+                        opacity: 0;
+                        transition: opacity 0.3s;
+                        pointer-events: none;
+                    }
 
-        .preview-button {
-            background-color: var(--accent-color);
-            color: var(--light-text-color);
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+                    .toast.show {
+                        opacity: 1;
+                    }
 
-        .preview-layout {
-            display: flex;
-        }
+                    @@media (max-width: 768px) {
+                        .preview-layout {
+                            flex-direction: column;
+                        }
 
-        .preview-main {
-            flex: 1;
-        }
+                        .preview-sidebar {
+                            width: auto;
+                        }
 
-        footer {
-            background-color: var(--primary-color);
-            color: var(--light-text-color);
-            text-align: center;
-            padding: 1rem;
-            margin-top: 2rem;
-        }
+                        .color-wheel {
+                            width: 200px;
+                            height: 200px;
+                        }
+                    }
 
-        /* Круговая палитра */
-        .color-wheel-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            margin: 20px 0;
-        }
+                    .loading-overlay {
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        background-color: rgba(255,255,255,0.8);
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        z-index: 1000;
+                        display: none;
+                    }
 
-        .color-wheel {
-            position: relative;
-            width: 250px;
-            height: 250px;
-            border-radius: 50%;
-            margin-bottom: 20px;
-            background: radial-gradient(circle, white, transparent), conic-gradient( from 0deg, red, yellow, lime, cyan, blue, magenta, red );
-            cursor: crosshair;
-            box-shadow: 0 0 10px rgba(0,0,0,0.2);
-        }
+                    .spinner {
+                        width: 40px;
+                        height: 40px;
+                        border: 4px solid rgba(0,0,0,0.1);
+                        border-radius: 50%;
+                        border-top-color: var(--primary-color);
+                        animation: spin 1s ease-in-out infinite;
+                    }
 
-        .color-wheel-selector {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            border: 2px solid white;
-            box-shadow: 0 0 5px rgba(0,0,0,0.5);
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            left: 50%;
-            top: 50%;
-}
+                    @@keyframes spin {
+                        to {
+                            transform: rotate(360deg);
+                        }
+                    }
+        </style>
+    </head>
 
+    <body>
+        <div class="app-container">
+            <header>
+                <h1>Дизайнер цветовой палитры</h1>
+            </header>
 
-        .color-preview {
-            width: 80px;
-            height: 80px;
-            border-radius: 8px;
-            border: 2px solid #ddd;
-            margin-top: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: white;
-            text-shadow: 0 0 2px rgba(0,0,0,0.8);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
+            <main>
+                <div class="card">
+                    <h2>Выбор цвета</h2>
 
-        /* История палитр */
-        .history-title {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .history-title button {
-            padding: 0.4rem 0.8rem;
-            font-size: 0.9rem;
-        }
-
-        .history-palettes {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-top: 10px;
-        }
-
-        .history-item {
-            display: flex;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: transform 0.2s;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-
-        .history-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-
-        .history-color {
-            flex: 1;
-            height: 40px;
-        }
-
-        .history-timestamp {
-            font-size: 0.8rem;
-            color: #888;
-            margin-bottom: 5px;
-        }
-
-        /* Меню выбора элемента */
-        .target-selector {
-            margin: 1rem 0;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .target-option {
-            padding: 5px 10px;
-            background: #f0f0f0;
-            border-radius: 4px;
-            cursor: pointer;
-            border: 1px solid #ddd;
-            transition: all 0.2s;
-        }
-
-        .target-option.active {
-            background: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
-        }
-
-        .target-option:hover:not(.active) {
-            background: #e0e0e0;
-        }
-
-        /* Кнопки действий с палитрой */
-        .palette-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        /* Всплывающее уведомление */
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 4px;
-            z-index: 1000;
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
-        }
-
-        .toast.show {
-            opacity: 1;
-        }
-
-        @@media (max-width: 768px) {
-            .preview-layout {
-                flex-direction: column;
-            }
-
-            .preview-sidebar {
-                width: auto;
-            }
-
-            .color-wheel {
-                width: 200px;
-                height: 200px;
-            }
-        }
-
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(255,255,255,0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            display: none;
-        }
-
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid rgba(0,0,0,0.1);
-            border-radius: 50%;
-            border-top-color: var(--primary-color);
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @@keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-    </style>
-</head>
-
-<body>
-    <div class="app-container">
-        <header>
-            <h1>Дизайнер цветовой палитры</h1>
-        </header>
-
-        <main>
-            <div class="card">
-                <h2>Выбор цвета</h2>
-
-                <div class="color-wheel-container">
-                    <div class="color-wheel" id="colorWheel">
-                        <div class="color-wheel-selector" id="colorSelector"></div>
+                    <div class="color-wheel-container">
+                        <div class="color-wheel" id="colorWheel">
+                            <div class="color-wheel-selector" id="colorSelector"></div>
+                        </div>
+                        <div class="color-preview" id="colorPreview">
+                            @Model[0]
+                        </div>
                     </div>
-                    <div class="color-preview" id="colorPreview">
-                        @Model[0]
+
+                    <form method="get" id="colorForm">
+                        <div class="form-group">
+                            <label for="baseColor">Hex-код выбранного цвета:</label>
+                            <input type="text" id="baseColor" name="baseColor" value="@(Model[0])" readonly />
+                        </div>
+                        <button type="submit">Сгенерировать палитру</button>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <h2>Сгенерированная палитра</h2>
+                    <div class="palette-container" id="palette">
+                        @foreach (var color in Model)
+                        {
+                            <div class="color-box" style="background-color: @color;" data-color="@color">
+                                <div class="color-code">@color</div>
+                                <div class="color-actions">
+                                    <div class="color-action-btn copy-color" title="Копировать цвет">
+                                        <i class="fas fa-copy"></i>
+                                    </div>
+                                    <div class="color-action-btn apply-color" title="Применить цвет">
+                                        <i class="fas fa-paint-brush"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="target-selector" id="targetSelector">
+                        <div class="target-option active" data-target="all">Вся палитра</div>
+                        <div class="target-option" data-target="primary">Основной</div>
+                        <div class="target-option" data-target="secondary">Вторичный</div>
+                        <div class="target-option" data-target="accent">Акцентный</div>
+                        <div class="target-option" data-target="background">Фон</div>
+                        <div class="target-option" data-target="text">Текст</div>
+                    </div>
+
+                    <div class="palette-actions">
+                        <button id="saveToHistory" onclick="savePaletteToHistory()">
+                            <i class="fas fa-save"></i> Сохранить в историю
+                        </button>
+                        <button id="copyPalette" onclick="copyPaletteToClipboard()">
+                            <i class="fas fa-copy"></i> Копировать палитру
+                        </button>
+                        <button id="downloadPalette" onclick="downloadPalette()">
+                            <i class="fas fa-download"></i> Скачать палитру
+                        </button>
+                        <button onclick="exportToHtml()">
+                            <i class="fas fa-file-code"></i> Экспорт в HTML
+                        </button>
+                        <button onclick="exportToAco()">
+                            <i class="fas fa-palette"></i> Экспорт в ACO (Photoshop)
+                        </button>
+                        <button onclick="exportToGpl()">
+                            <i class="fas fa-paint-brush"></i> Экспорт в GPL (GIMP)
+                        </button>
                     </div>
                 </div>
 
-                <form method="get" id="colorForm">
-                    <div class="form-group">
-                        <label for="baseColor">Hex-код выбранного цвета:</label>
-                        <input type="text" id="baseColor" name="baseColor" value="@(Model[0])" readonly />
+                <div class="card">
+                    <div class="history-title">
+                        <h2>История палитр</h2>
+                        <button id="clearHistory" onclick="clearHistory()">Очистить</button>
                     </div>
-                    <button type="submit">Сгенерировать палитру</button>
-                </form>
-            </div>
+                    <div class="history-palettes" id="historyContainer">
+                        <!-- Сюда будут добавляться сохраненные палитры -->
+                    </div>
+                </div>
 
-            <div class="card">
-                <h2>Сгенерированная палитра</h2>
-                <div class="palette-container" id="palette">
-                    @foreach (var color in Model)
-                    {
-                        <div class="color-box" style="background-color: @color;" data-color="@color">
-                            <div class="color-code">@color</div>
+                <div class="card">
+                    <h2>Загрузка изображения</h2>
+                    <p>Загрузите изображение, чтобы извлечь из него цветовую палитру</p>
+                    <div class="form-group">
+                        <input type="file" id="imageUpload" accept="image/*">
+                    </div>
+                    <canvas id="canvas" style="display:none;"></canvas>
+                </div>
+
+                <div class="card">
+                    <h2>Предпросмотр сайта</h2>
+                    <div class="preview-section">
+                        <div class="preview-container">
+                            <div class="preview-header">
+                                <h3>Заголовок сайта</h3>
+                            </div>
+                            <div class="preview-layout">
+                                <div class="preview-sidebar">
+                                    <ul>
+                                        <li>Главная</li>
+                                        <li>О нас</li>
+                                        <li>Услуги</li>
+                                        <li>Контакты</li>
+                                    </ul>
+                                </div>
+                                <div class="preview-main">
+                                    <div class="preview-content">
+                                        <h3>Содержание страницы</h3>
+                                        <p>Это пример содержания вашей веб-страницы с выбранной цветовой схемой.</p>
+                                        <button class="preview-button">Кнопка действия</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <footer>
+                <p>&copy; 2025 Генератор цветовой палитры</p>
+            </footer>
+        </div>
+
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="spinner"></div>
+        </div>
+
+        <div class="toast" id="toast"></div>
+
+
+        <script>
+
+                    // Глобальные переменные
+                    let currentPalette = [];
+                    let currentTargetElement = 'all';
+
+            document.addEventListener('DOMContentLoaded', function () {
+                initColorWheel();
+                loadHistory();
+                initColorBoxEvents();
+                initTargetSelector();
+
+                const baseColor = document.getElementById('baseColor').value;
+                fetch(`/api/palette/generate?baseColor=${encodeURIComponent(baseColor)}`)
+                    .then(response => {
+                        if (!response.ok) throw new Error('Ошибка инициализации');
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.complementary) {
+                        updatePalette(data.complementary);
+                            applyPalette(data.complementary[0]);
+                       
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Ошибка при начальной загрузке:', error);
+                        showToast('Не удалось загрузить начальную палитру');
+                    });
+            });
+            function updatePalette(colors) {
+                const paletteContainer = document.getElementById('palette');
+                paletteContainer.innerHTML = '';
+
+                colors.forEach(color => {
+                    const colorBox = `
+                        <div class="color-box" style="background-color: ${color}" data-color="${color}">
+                            <div class="color-code">${color}</div>
                             <div class="color-actions">
                                 <div class="color-action-btn copy-color" title="Копировать цвет">
                                     <i class="fas fa-copy"></i>
@@ -487,916 +628,806 @@
                                 </div>
                             </div>
                         </div>
-                    }
-                </div>
+                    `;
+                    paletteContainer.insertAdjacentHTML('beforeend', colorBox);
+                });
 
-                <div class="target-selector" id="targetSelector">
-                    <div class="target-option active" data-target="all">Вся палитра</div>
-                    <div class="target-option" data-target="primary">Основной</div>
-                    <div class="target-option" data-target="secondary">Вторичный</div>
-                    <div class="target-option" data-target="accent">Акцентный</div>
-                    <div class="target-option" data-target="background">Фон</div>
-                    <div class="target-option" data-target="text">Текст</div>
-                </div>
-
-                <div class="palette-actions">
-                    <button id="saveToHistory" onclick="savePaletteToHistory()">
-                        <i class="fas fa-save"></i> Сохранить в историю
-                    </button>
-                    <button id="copyPalette" onclick="copyPaletteToClipboard()">
-                        <i class="fas fa-copy"></i> Копировать палитру
-                    </button>
-                    <button id="downloadPalette" onclick="downloadPalette()">
-                        <i class="fas fa-download"></i> Скачать палитру
-                    </button>
-                    <button onclick="exportToHtml()">
-                        <i class="fas fa-file-code"></i> Экспорт в HTML
-                    </button>
-                    <button onclick="exportToAco()">
-                        <i class="fas fa-palette"></i> Экспорт в ACO (Photoshop)
-                    </button>
-                    <button onclick="exportToGpl()">
-                        <i class="fas fa-paint-brush"></i> Экспорт в GPL (GIMP)
-                    </button>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="history-title">
-                    <h2>История палитр</h2>
-                    <button id="clearHistory" onclick="clearHistory()">Очистить</button>
-                </div>
-                <div class="history-palettes" id="historyContainer">
-                    <!-- Сюда будут добавляться сохраненные палитры -->
-                </div>
-            </div>
-
-            <div class="card">
-                <h2>Загрузка изображения</h2>
-                <p>Загрузите изображение, чтобы извлечь из него цветовую палитру</p>
-                <div class="form-group">
-                    <input type="file" id="imageUpload" accept="image/*">
-                </div>
-                <canvas id="canvas" style="display:none;"></canvas>
-            </div>
-
-            <div class="card">
-                <h2>Предпросмотр сайта</h2>
-                <div class="preview-section">
-                    <div class="preview-container">
-                        <div class="preview-header">
-                            <h3>Заголовок сайта</h3>
-                        </div>
-                        <div class="preview-layout">
-                            <div class="preview-sidebar">
-                                <ul>
-                                    <li>Главная</li>
-                                    <li>О нас</li>
-                                    <li>Услуги</li>
-                                    <li>Контакты</li>
-                                </ul>
-                            </div>
-                            <div class="preview-main">
-                                <div class="preview-content">
-                                    <h3>Содержание страницы</h3>
-                                    <p>Это пример содержания вашей веб-страницы с выбранной цветовой схемой.</p>
-                                    <button class="preview-button">Кнопка действия</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-
-        <footer>
-            <p>&copy; 2025 Генератор цветовой палитры</p>
-        </footer>
-    </div>
-
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="spinner"></div>
-    </div>
-
-    <div class="toast" id="toast"></div>
-
-
-    <script>
-       
-        // Глобальные переменные
-        let currentPalette = [];
-        let currentTargetElement = 'all';
-
-        // Инициализация при загрузке страницы
-        document.addEventListener('DOMContentLoaded', function () {
-            initColorWheel();
-            loadHistory();
-            initColorBoxEvents();
-            initTargetSelector();
-
-            // Применяем начальную палитру
-            const palette = document.getElementById('palette');
-            if (palette && palette.children.length > 0) {
-                const colors = Array.from(palette.children).map(div => 
-                    div.getAttribute('data-color') || getComputedStyle(div).backgroundColor
-                );
                 currentPalette = colors;
-                applyPalette(colors[0]);
+                initColorBoxEvents();
+                applyPalette(colors[0]); 
             }
-        });
-
-        // Инициализирует события для цветовых блоков
-        function initColorBoxEvents() {
-            document.querySelectorAll('.color-box').forEach(box => {
-                // Клик по основному блоку цвета
-                box.addEventListener('click', function() {
-                    const color = this.getAttribute('data-color') || getComputedStyle(this).backgroundColor;
-                    if (currentTargetElement === 'all') {
-                        applyPalette(color);
-                    } else {
-                        applyColorToElement(color, currentTargetElement);
-                    }
-                });
-
-                // Кнопка копирования цвета
-                const copyBtn = box.querySelector('.copy-color');
-                if (copyBtn) {
-                    copyBtn.addEventListener('click', function(e) {
-                        e.stopPropagation();  // Предотвращаем запуск события click родителя
-                        const color = box.getAttribute('data-color') || getComputedStyle(box).backgroundColor;
-                        copyToClipboard(color);
-                        showToast(`Цвет ${color} скопирован в буфер обмена`);
-                    });
-                }
-
-                // Кнопка применения цвета
-                const applyBtn = box.querySelector('.apply-color');
-                if (applyBtn) {
-                    applyBtn.addEventListener('click', function(e) {
-                        e.stopPropagation();  // Предотвращаем запуск события click родителя
-                        const color = box.getAttribute('data-color') || getComputedStyle(box).backgroundColor;
-                        if (currentTargetElement === 'all') {
-                            applyPalette(color);
-                        } else {
-                            applyColorToElement(color, currentTargetElement);
-                        }
-                        showToast(`Цвет применен к элементу: ${getElementName(currentTargetElement)}`);
-                    });
-                }
-            });
-        }
-
-        // Инициализация выбора целевого элемента
-        function initTargetSelector() {
-            document.querySelectorAll('.target-option').forEach(option => {
-                option.addEventListener('click', function() {
-                    // Обновляем активный элемент
-                    document.querySelectorAll('.target-option').forEach(opt => {
-                        opt.classList.remove('active');
-                    });
-                    this.classList.add('active');
-                    
-                    // Устанавливаем текущий целевой элемент
-                    currentTargetElement = this.getAttribute('data-target');
-                    
-                    showToast(`Выбран элемент: ${getElementName(currentTargetElement)}`);
-                });
-            });
-        }
-
-        // Получение читаемого имени элемента
-        function getElementName(targetId) {
-            const names = {
-                'all': 'Вся палитра',
-                'primary': 'Основной цвет',
-                'secondary': 'Вторичный цвет',
-                'accent': 'Акцентный цвет',
-                'background': 'Фон',
-                'text': 'Текст'
-            };
-            return names[targetId] || targetId;
-        }
-
-        // Инициализация цветового круга
-        function initColorWheel() {
-            const colorWheel = document.getElementById('colorWheel');
-            const colorSelector = document.getElementById('colorSelector');
-            const colorPreview = document.getElementById('colorPreview');
-            const baseColorInput = document.getElementById('baseColor');
-
-            // Установка начального положения селектора
-            const initialColor = baseColorInput.value;
-            colorPreview.style.backgroundColor = initialColor;
-            colorPreview.textContent = initialColor;
-
-            // Обработчик событий клика и перемещения
-            colorWheel.addEventListener('mousedown', startColorSelect);
-            colorWheel.addEventListener('touchstart', startColorSelect, { passive: false });
-
-            function startColorSelect(e) {
-                e.preventDefault();
-
-                // Обработка одиночного клика
-                updateColorFromEvent(e);
-
-                // Добавление обработчиков для перетаскивания
-                document.addEventListener('mousemove', updateColorFromEvent);
-                document.addEventListener('touchmove', updateColorFromEvent, { passive: false });
-
-                document.addEventListener('mouseup', stopColorSelect);
-                document.addEventListener('touchend', stopColorSelect);
-            }
-
-            function stopColorSelect() {
-                document.removeEventListener('mousemove', updateColorFromEvent);
-                document.removeEventListener('touchmove', updateColorFromEvent);
-                document.removeEventListener('mouseup', stopColorSelect);
-                document.removeEventListener('touchend', stopColorSelect);
-            }
-
-            function updateColorFromEvent(e) {
-                e.preventDefault();
-                let clientX, clientY;
-
-                if (e.type.startsWith('touch')) {
-                    clientX = e.touches[0].clientX;
-                    clientY = e.touches[0].clientY;
-                } else {
-                    clientX = e.clientX;
-                    clientY = e.clientY;
-                }
-
-                // Получаем позицию и размер цветового круга
-                const rect = colorWheel.getBoundingClientRect();
-                const centerX = rect.left + rect.width / 2;
-                const centerY = rect.top + rect.height / 2;
-                const radius = rect.width / 2;
-
-                // Вычисляем позицию клика относительно центра
-                const x = clientX - centerX;
-                const y = clientY - centerY;
-
-                // Рассчитываем расстояние от центра до курсора
-                const distance = Math.sqrt(x * x + y * y);
-
-                // Ограничиваем расстояние радиусом круга
-                const clampedDistance = Math.min(distance, radius);
-
-                // Нормализуем расстояние (от 0 до 1)
-                const normDistance = clampedDistance / radius;
-
-                // Вычисляем угол в радианах
-                let angle = Math.atan2(y, x);
-
-                // Корректируем угол: 0° теперь будет сверху (красный)
-                let hue = ((angle * 180 / Math.PI) + 90) % 360;
-                hue = (hue + 360) % 360;
-                // if (hue < 0 || isNaN(hue)) hue += 360;
-
-                // Вычисляем позицию селектора относительно центра круга
-                const selectorPosX = (clampedDistance * Math.cos(angle)) / radius * 50;
-                const selectorPosY = (clampedDistance * Math.sin(angle)) / radius * 50;
-
-                colorSelector.style.left = `calc(50% + ${selectorPosX}%)`;
-                colorSelector.style.top = `calc(50% + ${selectorPosY}%)`;
-
-                // Преобразуем HSV в RGB
-                let saturation = normDistance;
-                let value = 1.0;
-                const rgb = hsvToRgb(hue, saturation, value);
-                const hex = rgbToHex(rgb[0], rgb[1], rgb[2]);
-
-                // Обновляем предпросмотр и значение ввода
-                colorPreview.style.backgroundColor = hex;
-                colorPreview.textContent = hex;
-                baseColorInput.value = hex;
-            }
-        }
-    
-        function hsvToRgb(h, s, v) {
-            let r, g, b;
-            let i = Math.floor(h / 60);
-            let f = h / 60 - i;
-            let p = v * (1 - s);
-            let q = v * (1 - f * s);
-            let t = v * (1 - (1 - f) * s);
-
-            switch (i % 6) {
-                case 0: r = v; g = t; b = p; break;
-                case 1: r = q; g = v; b = p; break;
-                case 2: r = p; g = v; b = t; break;
-                case 3: r = p; g = q; b = v; break;
-                case 4: r = t; g = p; b = v; break;
-                case 5: r = v; g = p; b = q; break;
-            }
-
-            return [
-                Math.round(r * 255),
-                Math.round(g * 255),
-                Math.round(b * 255)
-            ];
-        }
-
-        // RGB в Hex преобразование
-        function rgbToHex(r, g, b) {
-            return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
-        }
-
-        // Применение цвета к конкретному элементу дизайна
-        function applyColorToElement(color, element) {
-            switch(element) {
-                case 'primary':
-                    document.documentElement.style.setProperty('--primary-color', color);
-                    break;
-                case 'secondary':
-                    document.documentElement.style.setProperty('--secondary-color', color);
-                    break;
-                case 'accent':
-                    document.documentElement.style.setProperty('--accent-color', color);
-                    break;
-                case 'background':
-                    document.documentElement.style.setProperty('--background-color', color);
-                    break;
-                case 'text':
-                    document.documentElement.style.setProperty('--text-color', color);
-                    break;
-                default:
-                    // По умолчанию применяем ко всей палитре
-                    applyPalette(color);
-            }
-        }
-
-        // Применение цветовой палитры
-        function applyPalette(primaryColor) {
-            document.documentElement.style.setProperty('--primary-color', primaryColor);
-
-            // Получаем второй цвет из палитры или генерируем из основного
-            let secondaryColor = getComputedColorFromPalette(1) || adjustColor(primaryColor, 30);
-            document.documentElement.style.setProperty('--secondary-color', secondaryColor);
-
-            // Получаем акцентный цвет
-            let accentColor = getComputedColorFromPalette(2) || adjustHue(primaryColor, 180);
-            document.documentElement.style.setProperty('--accent-color', accentColor);
-
-            // Определяем цвет текста для контраста
-            let textColor = getContrastYIQ(primaryColor);
-            document.documentElement.style.setProperty('--text-color', textColor);
-
-            // Определяем цвет фона
-            let backgroundColor = textColor === '#333333' ? '#f5f5f5' : '#333333';
-            document.documentElement.style.setProperty('--background-color', backgroundColor);
-
-            // Сохраняем текущую палитру
-            updateCurrentPalette();
-        }
-
-        // Копирует цвет в буфер обмена
-        function copyToClipboard(text) {
-            // Создаем временный элемент для копирования
-            const tempInput = document.createElement('input');
-            tempInput.value = text;
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            document.execCommand('copy');
-            document.body.removeChild(tempInput);
-        }
-
-        // Копирует всю палитру в буфер обмена
-        function copyPaletteToClipboard() {
-            if (!currentPalette.length) return;
-            
-            // Формируем строку с цветами
-            const paletteText = currentPalette.join(', ');
-            copyToClipboard(paletteText);
-            
-            showToast('Палитра скопирована в буфер обмена');
-        }
-
-        // Скачивание палитры в формате JSON или CSS
-        function downloadPalette() {
-            if (!currentPalette.length) return;
-
-            // Создаем объект данных палитры
-            const paletteData = {
-                primary: currentPalette[0] || getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim(),
-                secondary: currentPalette[1] || getComputedStyle(document.documentElement).getPropertyValue('--secondary-color').trim(),
-                accent: currentPalette[2] || getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim(),
-                background: getComputedStyle(document.documentElement).getPropertyValue('--background-color').trim(),
-                text: getComputedStyle(document.documentElement).getPropertyValue('--text-color').trim()
-            };
-
-            // Создаем CSS-строку
-            const cssContent = `:root {
-  --primary-color: ${paletteData.primary};
-  --secondary-color: ${paletteData.secondary};
-  --accent-color: ${paletteData.accent};
-  --background-color: ${paletteData.background};
-  --text-color: ${paletteData.text};
-}`;
-
-            // Создаем блоб и ссылку для скачивания
-            const blob = new Blob([cssContent], { type: 'text/css' });
-            const url = URL.createObjectURL(blob);
-            
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'palette.css';
-            document.body.appendChild(a);
-            a.click();
-            
-            // Очищаем
-            setTimeout(() => {
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-            }, 100);
-            
-            showToast('Палитра скачана в формате CSS');
-        }
-
-        // Показывает всплывающее уведомление
-        function showToast(message, duration = 3000) {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.classList.add('show');
-            
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, duration);
-        }
-
-        // Обновляет текущую палитру из DOM
-        function updateCurrentPalette() {
-            const palette = document.getElementById('palette');
-            if (palette) {
-                currentPalette = Array.from(palette.children).map(div =>
-                    div.getAttribute('data-color') || getComputedStyle(div).backgroundColor
-                );
-            }
-        }
-
-        // Получает цвет из текущей палитры по индексу
-        function getComputedColorFromPalette(index) {
-            const palette = document.getElementById('palette');
-            if (palette && palette.children.length > index) {
-                return palette.children[index].getAttribute('data-color') || 
-                       getComputedStyle(palette.children[index]).backgroundColor;
-            }
-            return null;
-        }
-
-        // Настройка яркости цвета
-        function adjustColor(hex, amount) {
-            let usePound = hex[0] === "#";
-            let color = usePound ? hex.slice(1) : hex;
-
-            let num = parseInt(color, 16);
-            let r = (num >> 16) + amount;
-            let g = ((num >> 8) & 0x00FF) + amount;
-            let b = (num & 0x0000FF) + amount;
-
-            r = Math.min(255, Math.max(0, r));
-            g = Math.min(255, Math.max(0, g));
-            b = Math.min(255, Math.max(0, b));
-
-            return (usePound ? "#" : "") + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
-        }
-
-        // Изменение оттенка цвета
-        function adjustHue(hex, degree) {
-            // Преобразуем hex в rgb
-            let usePound = hex[0] === "#";
-            let color = usePound ? hex.slice(1) : hex;
-
-            let r = parseInt(color.substr(0, 2), 16);
-            let g = parseInt(color.substr(2, 2), 16);
-            let b = parseInt(color.substr(4, 2), 16);
-
-            // Преобразуем RGB в HSL
-            let [h, s, l] = rgbToHsl(r, g, b);
-
-            // Изменяем оттенок
-            h = (h + degree) % 360;
-            if (h < 0) h += 360;
-
-            // Преобразуем обратно в RGB
-            let rgb = hslToRgb(h, s, l);
-
-            // Форматируем обратно в hex
-            return (usePound ? "#" : "") +
-                ((1 << 24) + (rgb[0] << 16) + (rgb[1] << 8) + rgb[2]).toString(16).slice(1);
-        }
-
-        // RGB в HSL преобразование
-        function rgbToHsl(r, g, b) {
-            r /= 255, g /= 255, b /= 255;
-
-            let max = Math.max(r, g, b), min = Math.min(r, g, b);
-            let h, s, l = (max + min) / 2;
-
-            if (max === min) {
-                h = s = 0; // ахроматический
-            } else {
-                let d = max - min;
-                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-
-                switch (max) {
-                    case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-                    case g: h = (b - r) / d + 2; break;
-                    case b: h = (r - g) / d + 4; break;
-                }
-                h *= 60;
-            }
-
-            return [h, s, l];
-        }
-
-        // HSL в RGB преобразование
-        function hslToRgb(h, s, l) {
-            let r, g, b;
-
-            if (s === 0) {
-                r = g = b = l; // ахроматический
-            } else {
-                function hue2rgb(p, q, t) {
-                    if (t < 0) t += 1;
-                    if (t > 1) t -= 1;
-                    if (t < 1 / 6) return p + (q - p) * 6 * t;
-                    if (t < 1 / 2) return q;
-                    if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-                    return p;
-                }
-
-                let q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-                let p = 2 * l - q;
-
-                r = hue2rgb(p, q, h / 360 + 1 / 3);
-                g = hue2rgb(p, q, h / 360);
-                b = hue2rgb(p, q, h / 360 - 1 / 3);
-            }
-
-            return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
-        }
-
-        // Определяет контрастный цвет текста
-        function getContrastYIQ(hex) {
-            // Если hex начинается с #, удаляем его
-            if (hex.startsWith('#')) {
-                hex = hex.slice(1);
-            }
-
-            // Если передан RGB, преобразуем в hex
-            if (hex.startsWith('rgb')) {
-                let parts = hex.match(/\d+/g);
-                if (parts && parts.length >= 3) {
-                    let r = parseInt(parts[0]);
-                    let g = parseInt(parts[1]);
-                    let b = parseInt(parts[2]);
-                    hex = ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
-                }
-            }
-
-            // Если длина hex 3, преобразуем в 6 символов
-            if (hex.length === 3) {
-                hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
-            }
-
-            let r = parseInt(hex.substr(0, 2), 16);
-            let g = parseInt(hex.substr(2, 2), 16);
-            let b = parseInt(hex.substr(4, 2), 16);
-            let yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
-
-            return (yiq >= 128) ? '#333333' : '#ffffff';
-        }
-
-        // Обработка загрузки изображения
-        document.getElementById('imageUpload').addEventListener('change', function (event) {
-            const loadingOverlay = document.getElementById('loadingOverlay');
-            loadingOverlay.style.display = 'flex';
-
-            let file = event.target.files[0];
-            if (!file) {
-                loadingOverlay.style.display = 'none';
-                return;
-            }
-
-            let reader = new FileReader();
-            reader.onload = function (e) {
-                let img = new Image();
-                img.src = e.target.result;
-                img.onload = function () {
-                    let canvas = document.getElementById('canvas');
-                    let ctx = canvas.getContext('2d');
-
-                    // Уменьшаем размер для более быстрой обработки
-                    let maxSize = 300;
-                    let width = img.width;
-                    let height = img.height;
-                    if (width > maxSize || height > maxSize) {
-                        let ratio = Math.min(maxSize / width, maxSize / height);
-                        width = width * ratio;
-                        height = height * ratio;
+                    // Инициализирует события для цветовых блоков
+                    function initColorBoxEvents() {
+                        document.querySelectorAll('.color-box').forEach(box => {
+                            // Клик по основному блоку цвета
+                            box.addEventListener('click', function() {
+                                const color = this.getAttribute('data-color') || getComputedStyle(this).backgroundColor;
+                                if (currentTargetElement === 'all') {
+                                    applyPalette(color);
+                                } else {
+                                    applyColorToElement(color, currentTargetElement);
+                                }
+                            });
+
+                            // Кнопка копирования цвета
+                            const copyBtn = box.querySelector('.copy-color');
+                            if (copyBtn) {
+                                copyBtn.addEventListener('click', function(e) {
+                                    e.stopPropagation();  // Предотвращаем запуск события click родителя
+                                    const color = box.getAttribute('data-color') || getComputedStyle(box).backgroundColor;
+                                    copyToClipboard(color);
+                                    showToast(`Цвет ${color} скопирован в буфер обмена`);
+                                });
+                            }
+
+                            // Кнопка применения цвета
+                            const applyBtn = box.querySelector('.apply-color');
+                            if (applyBtn) {
+                                applyBtn.addEventListener('click', function(e) {
+                                    e.stopPropagation();  // Предотвращаем запуск события click родителя
+                                    const color = box.getAttribute('data-color') || getComputedStyle(box).backgroundColor;
+                                    if (currentTargetElement === 'all') {
+                                        applyPalette(color);
+                                    } else {
+                                        applyColorToElement(color, currentTargetElement);
+                                    }
+                                    showToast(`Цвет применен к элементу: ${getElementName(currentTargetElement)}`);
+                                });
+                            }
+                        });
                     }
 
-                    canvas.width = width;
-                    canvas.height = height;
-                    ctx.drawImage(img, 0, 0, width, height);
+                    // Инициализация выбора целевого элемента
+                    function initTargetSelector() {
+                        document.querySelectorAll('.target-option').forEach(option => {
+                            option.addEventListener('click', function() {
+                                // Обновляем активный элемент
+                                document.querySelectorAll('.target-option').forEach(opt => {
+                                    opt.classList.remove('active');
+                                });
+                                this.classList.add('active');
 
-                    let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+                                // Устанавливаем текущий целевой элемент
+                                currentTargetElement = this.getAttribute('data-target');
 
-                    // Используем улучшенный алгоритм извлечения доминантных цветов
-                    let colors = extractDominantColors(imageData, 5);
+                                showToast(`Выбран элемент: ${getElementName(currentTargetElement)}`);
+                            });
+                        });
+                    }
 
-                    // Очищаем существующую палитру
-                    let paletteDiv = document.getElementById("palette");
-                    paletteDiv.innerHTML = '';
+                    // Получение читаемого имени элемента
+                    function getElementName(targetId) {
+                        const names = {
+                            'all': 'Вся палитра',
+                            'primary': 'Основной цвет',
+                            'secondary': 'Вторичный цвет',
+                            'accent': 'Акцентный цвет',
+                            'background': 'Фон',
+                            'text': 'Текст'
+                        };
+                        return names[targetId] || targetId;
+                    }
 
-                    // Добавляем новые цвета
-                    colors.forEach(color => {
-                        let div = document.createElement("div");
-                        div.className = "color-box";
-                        div.style.backgroundColor = color;
-                        div.setAttribute('data-color', color);
-
-                        let colorCode = document.createElement("div");
-                        colorCode.className = "color-code";
-                        colorCode.textContent = color;
-                        div.appendChild(colorCode);
-
-                        let colorActions = document.createElement("div");
-                        colorActions.className = "color-actions";
-                        
-                        let copyBtn = document.createElement("div");
-                        copyBtn.className = "color-action-btn copy-color";
-                        copyBtn.title = "Копировать цвет";
-                        copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
-                        
-                        let applyBtn = document.createElement("div");
-                        applyBtn.className = "color-action-btn apply-color";
-                        applyBtn.title = "Применить цвет";
-                        applyBtn.innerHTML = '<i class="fas fa-paint-brush"></i>';
-                        
-                        colorActions.appendChild(copyBtn);
-                        colorActions.appendChild(applyBtn);
-                        div.appendChild(colorActions);
-
-                        paletteDiv.appendChild(div);
-                    });
-
-                    // Инициализируем события для новых цветовых блоков
-                    initColorBoxEvents();
-
-                    // Применяем первый цвет
-                    if (colors.length > 0) {
-                        applyPalette(colors[0]);
-
-                        // Обновляем предпросмотр и поле ввода
+                    // Инициализация цветового круга
+                    function initColorWheel() {
+                        const colorWheel = document.getElementById('colorWheel');
+                        const colorSelector = document.getElementById('colorSelector');
                         const colorPreview = document.getElementById('colorPreview');
                         const baseColorInput = document.getElementById('baseColor');
 
-                        colorPreview.style.backgroundColor = colors[0];
-                        colorPreview.textContent = colors[0];
-                        baseColorInput.value = colors[0];
+                        // Установка начального положения селектора
+                        const initialColor = baseColorInput.value;
+                        colorPreview.style.backgroundColor = initialColor;
+                        colorPreview.textContent = initialColor;
+
+                        // Обработчик событий клика и перемещения
+                        colorWheel.addEventListener('mousedown', startColorSelect);
+                        colorWheel.addEventListener('touchstart', startColorSelect, { passive: false });
+
+                        function startColorSelect(e) {
+                            e.preventDefault();
+
+                            // Обработка одиночного клика
+                            updateColorFromEvent(e);
+
+                            // Добавление обработчиков для перетаскивания
+                            document.addEventListener('mousemove', updateColorFromEvent);
+                            document.addEventListener('touchmove', updateColorFromEvent, { passive: false });
+
+                            document.addEventListener('mouseup', stopColorSelect);
+                            document.addEventListener('touchend', stopColorSelect);
+                        }
+
+                        function stopColorSelect() {
+                            document.removeEventListener('mousemove', updateColorFromEvent);
+                            document.removeEventListener('touchmove', updateColorFromEvent);
+                            document.removeEventListener('mouseup', stopColorSelect);
+                            document.removeEventListener('touchend', stopColorSelect);
+                        }
+
+                        function updateColorFromEvent(e) {
+                            e.preventDefault();
+                            let clientX, clientY;
+
+                            if (e.type.startsWith('touch')) {
+                                clientX = e.touches[0].clientX;
+                                clientY = e.touches[0].clientY;
+                            } else {
+                                clientX = e.clientX;
+                                clientY = e.clientY;
+                            }
+
+                            // Получаем позицию и размер цветового круга
+                            const rect = colorWheel.getBoundingClientRect();
+                            const centerX = rect.left + rect.width / 2;
+                            const centerY = rect.top + rect.height / 2;
+                            const radius = rect.width / 2;
+
+                            // Вычисляем позицию клика относительно центра
+                            const x = clientX - centerX;
+                            const y = clientY - centerY;
+
+                            // Рассчитываем расстояние от центра до курсора
+                            const distance = Math.sqrt(x * x + y * y);
+
+                            // Ограничиваем расстояние радиусом круга
+                            const clampedDistance = Math.min(distance, radius);
+
+                            // Нормализуем расстояние (от 0 до 1)
+                            const normDistance = clampedDistance / radius;
+
+                            // Вычисляем угол в радианах
+                            let angle = Math.atan2(y, x);
+
+                            // Корректируем угол: 0° теперь будет сверху (красный)
+                            let hue = ((angle * 180 / Math.PI) + 90) % 360;
+                            hue = (hue + 360) % 360;
+                            // if (hue < 0 || isNaN(hue)) hue += 360;
+
+                            // Вычисляем позицию селектора относительно центра круга
+                            const selectorPosX = (clampedDistance * Math.cos(angle)) / radius * 50;
+                            const selectorPosY = (clampedDistance * Math.sin(angle)) / radius * 50;
+
+                            colorSelector.style.left = `calc(50% + ${selectorPosX}%)`;
+                            colorSelector.style.top = `calc(50% + ${selectorPosY}%)`;
+
+                            // Преобразуем HSV в RGB
+                            let saturation = normDistance;
+                            let value = 1.0;
+                            const rgb = hsvToRgb(hue, saturation, value);
+                            const hex = rgbToHex(rgb[0], rgb[1], rgb[2]);
+
+                            // Обновляем предпросмотр и значение ввода
+                            colorPreview.style.backgroundColor = hex;
+                            colorPreview.textContent = hex;
+                            baseColorInput.value = hex;
+                        }
                     }
 
-                    loadingOverlay.style.display = 'none';
-                    showToast('Цветовая палитра создана из загруженного изображения');
-                };
-            };
-            reader.readAsDataURL(file);
-        });
+                    function hsvToRgb(h, s, v) {
+                        let r, g, b;
+                        let i = Math.floor(h / 60);
+                        let f = h / 60 - i;
+                        let p = v * (1 - s);
+                        let q = v * (1 - f * s);
+                        let t = v * (1 - (1 - f) * s);
 
-        // Извлечение доминантных цветов из изображения
-        function extractDominantColors(imageData, colorCount) {
-            // Квантование цветов
-            const colorMap = {};
-            const step = Math.max(1, Math.floor(imageData.length / 4 / 10000)); // Оптимизация - берем не все пиксели
+                        switch (i % 6) {
+                            case 0: r = v; g = t; b = p; break;
+                            case 1: r = q; g = v; b = p; break;
+                            case 2: r = p; g = v; b = t; break;
+                            case 3: r = p; g = q; b = v; break;
+                            case 4: r = t; g = p; b = v; break;
+                            case 5: r = v; g = p; b = q; break;
+                        }
 
-            for (let i = 0; i < imageData.length; i += 4 * step) {
-                // Пропускаем прозрачные пиксели
-                if (imageData[i + 3] < 128) continue;
+                        return [
+                            Math.round(r * 255),
+                            Math.round(g * 255),
+                            Math.round(b * 255)
+                        ];
+                    }
 
-                // Понижаем разрешение цвета для объединения похожих цветов
-                let r = Math.floor(imageData[i] / 16) * 16;
-                let g = Math.floor(imageData[i + 1] / 16) * 16;
-                let b = Math.floor(imageData[i + 2] / 16) * 16;
+                    // RGB в Hex преобразование
+                    function rgbToHex(r, g, b) {
+                        return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+                    }
 
-                let hex = `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+                    // Применение цвета к конкретному элементу дизайна
+                    function applyColorToElement(color, element) {
+                        switch(element) {
+                            case 'primary':
+                                document.documentElement.style.setProperty('--primary-color', color);
+                                break;
+                            case 'secondary':
+                                document.documentElement.style.setProperty('--secondary-color', color);
+                                break;
+                            case 'accent':
+                                document.documentElement.style.setProperty('--accent-color', color);
+                                break;
+                            case 'background':
+                                document.documentElement.style.setProperty('--background-color', color);
+                                break;
+                            case 'text':
+                                document.documentElement.style.setProperty('--text-color', color);
+                                break;
+                            default:
+                                // По умолчанию применяем ко всей палитре
+                                applyPalette(color);
+                        }
+                    }
 
-                colorMap[hex] = (colorMap[hex] || 0) + 1;
-            }
+                    // Применение цветовой палитры
+                    function applyPalette(primaryColor) {
+                        document.documentElement.style.setProperty('--primary-color', primaryColor);
 
-            // Сортируем цвета по частоте
-            let sortedColors = Object.entries(colorMap)
-                .sort((a, b) => b[1] - a[1])
-                .map(entry => entry[0]);
+                        // Получаем второй цвет из палитры или генерируем из основного
+                        let secondaryColor = getComputedColorFromPalette(1) || adjustColor(primaryColor, 30);
+                        document.documentElement.style.setProperty('--secondary-color', secondaryColor);
 
-            // Фильтруем цвета, чтобы убрать слишком похожие
-            let filteredColors = [];
-            for (let color of sortedColors) {
-                // Проверяем, является ли этот цвет уникальным на основе цветового расстояния
-                if (isDistinctColor(color, filteredColors)) {
-                    filteredColors.push(color);
-                }
+                        // Получаем акцентный цвет
+                        let accentColor = getComputedColorFromPalette(2) || adjustHue(primaryColor, 180);
+                        document.documentElement.style.setProperty('--accent-color', accentColor);
 
-                if (filteredColors.length >= colorCount) break;
-            }
+                        // Определяем цвет текста для контраста
+                        let textColor = getContrastYIQ(primaryColor);
+                        document.documentElement.style.setProperty('--text-color', textColor);
 
-            return filteredColors;
-        }
+                        // Определяем цвет фона
+                        let backgroundColor = textColor === '#333333' ? '#f5f5f5' : '#333333';
+                        document.documentElement.style.setProperty('--background-color', backgroundColor);
 
-        // Проверяет, является ли цвет достаточно отличным от существующих цветов
-        function isDistinctColor(color, existingColors, threshold = 30) {
-            for (let existingColor of existingColors) {
-                if (getColorDistance(color, existingColor) < threshold) {
-                    return false;
-                }
-            }
-            return true;
-        }
+                        // Сохраняем текущую палитру
+                        updateCurrentPalette();
+                    }
 
-        // Вычисляет расстояние между двумя цветами в RGB пространстве
-        function getColorDistance(color1, color2) {
-            // Преобразуем hex в RGB
-            let r1 = parseInt(color1.slice(1, 3), 16);
-            let g1 = parseInt(color1.slice(3, 5), 16);
-            let b1 = parseInt(color1.slice(5, 7), 16);
+                    // Копирует цвет в буфер обмена
+                    function copyToClipboard(text) {
+                        // Создаем временный элемент для копирования
+                        const tempInput = document.createElement('input');
+                        tempInput.value = text;
+                        document.body.appendChild(tempInput);
+                        tempInput.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(tempInput);
+                    }
 
-            let r2 = parseInt(color2.slice(1, 3), 16);
-            let g2 = parseInt(color2.slice(3, 5), 16);
-            let b2 = parseInt(color2.slice(5, 7), 16);
+                    // Копирует всю палитру в буфер обмена
+                    function copyPaletteToClipboard() {
+                        if (!currentPalette.length) return;
 
-            // Евклидово расстояние в RGB пространстве
-            return Math.sqrt(
-                Math.pow(r2 - r1, 2) +
-                Math.pow(g2 - g1, 2) +
-                Math.pow(b2 - b1, 2)
-            );
-        }
+                        // Формируем строку с цветами
+                        const paletteText = currentPalette.join(', ');
+                        copyToClipboard(paletteText);
 
-        // Функции для работы с историей палитр
+                        showToast('Палитра скопирована в буфер обмена');
+                    }
 
-        // Сохраняет текущую палитру в историю
-        function savePaletteToHistory() {
-            if (!currentPalette.length) return;
+                    // Скачивание палитры в формате JSON или CSS
+                    function downloadPalette() {
+                        if (!currentPalette.length) return;
 
-            // Получаем существующую историю
-            let history = getHistoryFromStorage();
+                        // Создаем объект данных палитры
+                        const paletteData = {
+                            primary: currentPalette[0] || getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim(),
+                            secondary: currentPalette[1] || getComputedStyle(document.documentElement).getPropertyValue('--secondary-color').trim(),
+                            accent: currentPalette[2] || getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim(),
+                            background: getComputedStyle(document.documentElement).getPropertyValue('--background-color').trim(),
+                            text: getComputedStyle(document.documentElement).getPropertyValue('--text-color').trim()
+                        };
 
-            // Создаем новую запись
-            const newEntry = {
-                id: Date.now(),
-                timestamp: new Date().toLocaleString(),
-                colors: currentPalette
-            };
+                        // Создаем CSS-строку
+                        const cssContent = `:root {
+              --primary-color: ${paletteData.primary};
+              --secondary-color: ${paletteData.secondary};
+              --accent-color: ${paletteData.accent};
+              --background-color: ${paletteData.background};
+              --text-color: ${paletteData.text};
+            }`;
 
-            // Добавляем в начало истории
-            history.unshift(newEntry);
+                        // Создаем блоб и ссылку для скачивания
+                        const blob = new Blob([cssContent], { type: 'text/css' });
+                        const url = URL.createObjectURL(blob);
 
-            // Ограничиваем размер истории (хранить последние 10 палитр)
-            if (history.length > 10) {
-                history = history.slice(0, 10);
-            }
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'palette.css';
+                        document.body.appendChild(a);
+                        a.click();
 
-            // Сохраняем обратно в localStorage
-            localStorage.setItem('colorPaletteHistory', JSON.stringify(history));
+                        // Очищаем
+                        setTimeout(() => {
+                            document.body.removeChild(a);
+                            URL.revokeObjectURL(url);
+                        }, 100);
 
-            // Обновляем отображение истории
-            displayHistory();
+                        showToast('Палитра скачана в формате CSS');
+                    }
 
-            // Показываем уведомление
-            showToast('Палитра сохранена в историю!');
-        }
+                    // Показывает всплывающее уведомление
+                    function showToast(message, duration = 3000) {
+                        const toast = document.getElementById('toast');
+                        toast.textContent = message;
+                        toast.classList.add('show');
 
-        // Загружает историю из localStorage
-        function getHistoryFromStorage() {
-            const historyJson = localStorage.getItem('colorPaletteHistory');
-            return historyJson ? JSON.parse(historyJson) : [];
-        }
+                        setTimeout(() => {
+                            toast.classList.remove('show');
+                        }, duration);
+                    }
 
-        // Отображает историю в интерфейсе
-        function displayHistory() {
-            const historyContainer = document.getElementById('historyContainer');
-            const history = getHistoryFromStorage();
+                    // Обновляет текущую палитру из DOM
+                    function updateCurrentPalette() {
+                        const palette = document.getElementById('palette');
+                        if (palette) {
+                            currentPalette = Array.from(palette.children).map(div =>
+                                div.getAttribute('data-color') || getComputedStyle(div).backgroundColor
+                            );
+                        }
+                    }
 
-            // Очищаем контейнер
-            historyContainer.innerHTML = '';
+                    // Получает цвет из текущей палитры по индексу
+                    function getComputedColorFromPalette(index) {
+                        const palette = document.getElementById('palette');
+                        if (palette && palette.children.length > index) {
+                            return palette.children[index].getAttribute('data-color') ||
+                                   getComputedStyle(palette.children[index]).backgroundColor;
+                        }
+                        return null;
+                    }
 
-            if (history.length === 0) {
-                historyContainer.innerHTML = '<p>История пуста</p>';
-                return;
-            }
+                    // Настройка яркости цвета
+                    function adjustColor(hex, amount) {
+                        let usePound = hex[0] === "#";
+                        let color = usePound ? hex.slice(1) : hex;
 
-            // Добавляем каждую сохраненную палитру
-            history.forEach(entry => {
-                const historyItem = document.createElement('div');
-                historyItem.className = 'history-item';
-                historyItem.onclick = () => loadPaletteFromHistory(entry);
+                        let num = parseInt(color, 16);
+                        let r = (num >> 16) + amount;
+                        let g = ((num >> 8) & 0x00FF) + amount;
+                        let b = (num & 0x0000FF) + amount;
 
-                // Добавляем таймштамп
-                const timestamp = document.createElement('div');
-                timestamp.className = 'history-timestamp';
-                timestamp.textContent = entry.timestamp;
-                historyItem.insertAdjacentElement('beforebegin', timestamp);
+                        r = Math.min(255, Math.max(0, r));
+                        g = Math.min(255, Math.max(0, g));
+                        b = Math.min(255, Math.max(0, b));
 
-                // Добавляем цвета
-                entry.colors.forEach(color => {
-                    const colorDiv = document.createElement('div');
-                    colorDiv.className = 'history-color';
-                    colorDiv.style.backgroundColor = color;
-                    historyItem.appendChild(colorDiv);
-                });
+                        return (usePound ? "#" : "") + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+                    }
 
-                historyContainer.appendChild(historyItem);
-            });
-        }
+                    // Изменение оттенка цвета
+                    function adjustHue(hex, degree) {
+                        // Преобразуем hex в rgb
+                        let usePound = hex[0] === "#";
+                        let color = usePound ? hex.slice(1) : hex;
 
-        // Загружает палитру из истории
-        function loadPaletteFromHistory(historyEntry) {
-            if (!historyEntry || !historyEntry.colors || !historyEntry.colors.length) return;
+                        let r = parseInt(color.substr(0, 2), 16);
+                        let g = parseInt(color.substr(2, 2), 16);
+                        let b = parseInt(color.substr(4, 2), 16);
 
-            // Получаем div палитры
-            const paletteDiv = document.getElementById('palette');
-            paletteDiv.innerHTML = '';
+                        // Преобразуем RGB в HSL
+                        let [h, s, l] = rgbToHsl(r, g, b);
 
-            // Добавляем цвета из истории
-            historyEntry.colors.forEach(color => {
-                const div = document.createElement('div');
-                div.className = 'color-box';
-                div.style.backgroundColor = color;
-                div.setAttribute('data-color', color);
+                        // Изменяем оттенок
+                        h = (h + degree) % 360;
+                        if (h < 0) h += 360;
 
-                const colorCode = document.createElement('div');
-                colorCode.className = 'color-code';
-                colorCode.textContent = color;
-                div.appendChild(colorCode);
+                        // Преобразуем обратно в RGB
+                        let rgb = hslToRgb(h, s, l);
 
-                const colorActions = document.createElement('div');
-                colorActions.className = 'color-actions';
-                
-                const copyBtn = document.createElement('div');
-                copyBtn.className = 'color-action-btn copy-color';
-                copyBtn.title = 'Копировать цвет';
-                copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
-                
-                const applyBtn = document.createElement('div');
-                applyBtn.className = 'color-action-btn apply-color';
-                applyBtn.title = 'Применить цвет';
-                applyBtn.innerHTML = '<i class="fas fa-paint-brush"></i>';
-                
-                colorActions.appendChild(copyBtn);
-                colorActions.appendChild(applyBtn);
-                div.appendChild(colorActions);
+                        // Форматируем обратно в hex
+                        return (usePound ? "#" : "") +
+                            ((1 << 24) + (rgb[0] << 16) + (rgb[1] << 8) + rgb[2]).toString(16).slice(1);
+                    }
 
-                paletteDiv.appendChild(div);
-            });
+                    // RGB в HSL преобразование
+                    function rgbToHsl(r, g, b) {
+                        r /= 255, g /= 255, b /= 255;
 
-            // Инициализируем события для новых цветовых блоков
-            initColorBoxEvents();
+                        let max = Math.max(r, g, b), min = Math.min(r, g, b);
+                        let h, s, l = (max + min) / 2;
 
-            // Применяем первый цвет
-            if (historyEntry.colors.length > 0) {
-                const firstColor = historyEntry.colors[0];
-                applyPalette(firstColor);
+                        if (max === min) {
+                            h = s = 0; // ахроматический
+                        } else {
+                            let d = max - min;
+                            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
 
-                // Обновляем предпросмотр и поле ввода цвета
-                const colorPreview = document.getElementById('colorPreview');
-                const baseColorInput = document.getElementById('baseColor');
+                            switch (max) {
+                                case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                                case g: h = (b - r) / d + 2; break;
+                                case b: h = (r - g) / d + 4; break;
+                            }
+                            h *= 60;
+                        }
 
-                colorPreview.style.backgroundColor = firstColor;
-                colorPreview.textContent = firstColor;
-                baseColorInput.value = firstColor;
-            }
+                        return [h, s, l];
+                    }
 
-            showToast('Палитра загружена из истории');
-        }
+                    // HSL в RGB преобразование
+                    function hslToRgb(h, s, l) {
+                        let r, g, b;
 
-        // Очистка истории
-        function clearHistory() {
-            if (confirm('Вы уверены, что хотите очистить всю историю палитр?')) {
-                localStorage.removeItem('colorPaletteHistory');
-                displayHistory();
-                showToast('История очищена');
-            }
-        }
-        function exportToHtml() {
-            const colors = currentPalette; // Используем текущую палитру
-            window.location.href = `/Color/ExportToHtml?colors=${encodeURIComponent(colors.join(','))}`;
-        }
+                        if (s === 0) {
+                            r = g = b = l; // ахроматический
+                        } else {
+                            function hue2rgb(p, q, t) {
+                                if (t < 0) t += 1;
+                                if (t > 1) t -= 1;
+                                if (t < 1 / 6) return p + (q - p) * 6 * t;
+                                if (t < 1 / 2) return q;
+                                if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+                                return p;
+                            }
 
-        function exportToAco() {
-            const colors = currentPalette; // Используем текущую палитру
-            window.location.href = `/Color/ExportToAco?colors=${encodeURIComponent(colors.join(','))}`;
-        }
+                            let q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+                            let p = 2 * l - q;
 
-        function exportToGpl() {
-            const colors = currentPalette; // Используем текущую палитру
-            window.location.href = `/Color/ExportToGpl?colors=${encodeURIComponent(colors.join(','))}`;
-        }
-        // Начальная загрузка истории
-        function loadHistory() {
-            displayHistory();
-        }
-      
-    </script>
-</body>
+                            r = hue2rgb(p, q, h / 360 + 1 / 3);
+                            g = hue2rgb(p, q, h / 360);
+                            b = hue2rgb(p, q, h / 360 - 1 / 3);
+                        }
+
+                        return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+                    }
+
+                    // Определяет контрастный цвет текста
+                    function getContrastYIQ(hex) {
+                        // Если hex начинается с #, удаляем его
+                        if (hex.startsWith('#')) {
+                            hex = hex.slice(1);
+                        }
+
+                        // Если передан RGB, преобразуем в hex
+                        if (hex.startsWith('rgb')) {
+                            let parts = hex.match(/\d+/g);
+                            if (parts && parts.length >= 3) {
+                                let r = parseInt(parts[0]);
+                                let g = parseInt(parts[1]);
+                                let b = parseInt(parts[2]);
+                                hex = ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+                            }
+                        }
+
+                        // Если длина hex 3, преобразуем в 6 символов
+                        if (hex.length === 3) {
+                            hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+                        }
+
+                        let r = parseInt(hex.substr(0, 2), 16);
+                        let g = parseInt(hex.substr(2, 2), 16);
+                        let b = parseInt(hex.substr(4, 2), 16);
+                        let yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+
+                        return (yiq >= 128) ? '#333333' : '#ffffff';
+                    }
+
+                    // Обработка загрузки изображения
+                    document.getElementById('imageUpload').addEventListener('change', function (event) {
+                        const loadingOverlay = document.getElementById('loadingOverlay');
+                        loadingOverlay.style.display = 'flex';
+
+                        let file = event.target.files[0];
+                        if (!file) {
+                            loadingOverlay.style.display = 'none';
+                            return;
+                        }
+
+                        let reader = new FileReader();
+                        reader.onload = function (e) {
+                            let img = new Image();
+                            img.src = e.target.result;
+                            img.onload = function () {
+                                let canvas = document.getElementById('canvas');
+                                let ctx = canvas.getContext('2d');
+
+                                // Уменьшаем размер для более быстрой обработки
+                                let maxSize = 300;
+                                let width = img.width;
+                                let height = img.height;
+                                if (width > maxSize || height > maxSize) {
+                                    let ratio = Math.min(maxSize / width, maxSize / height);
+                                    width = width * ratio;
+                                    height = height * ratio;
+                                }
+
+                                canvas.width = width;
+                                canvas.height = height;
+                                ctx.drawImage(img, 0, 0, width, height);
+
+                                let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+
+                                // Используем улучшенный алгоритм извлечения доминантных цветов
+                                let colors = extractDominantColors(imageData, 5);
+
+                                // Очищаем существующую палитру
+                                let paletteDiv = document.getElementById("palette");
+                                paletteDiv.innerHTML = '';
+
+                                // Добавляем новые цвета
+                                colors.forEach(color => {
+                                    let div = document.createElement("div");
+                                    div.className = "color-box";
+                                    div.style.backgroundColor = color;
+                                    div.setAttribute('data-color', color);
+
+                                    let colorCode = document.createElement("div");
+                                    colorCode.className = "color-code";
+                                    colorCode.textContent = color;
+                                    div.appendChild(colorCode);
+
+                                    let colorActions = document.createElement("div");
+                                    colorActions.className = "color-actions";
+
+                                    let copyBtn = document.createElement("div");
+                                    copyBtn.className = "color-action-btn copy-color";
+                                    copyBtn.title = "Копировать цвет";
+                                    copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
+
+                                    let applyBtn = document.createElement("div");
+                                    applyBtn.className = "color-action-btn apply-color";
+                                    applyBtn.title = "Применить цвет";
+                                    applyBtn.innerHTML = '<i class="fas fa-paint-brush"></i>';
+
+                                    colorActions.appendChild(copyBtn);
+                                    colorActions.appendChild(applyBtn);
+                                    div.appendChild(colorActions);
+
+                                    paletteDiv.appendChild(div);
+                                });
+
+                                // Инициализируем события для новых цветовых блоков
+                                initColorBoxEvents();
+
+                                // Применяем первый цвет
+                                if (colors.length > 0) {
+                                    applyPalette(colors[0]);
+
+                                    // Обновляем предпросмотр и поле ввода
+                                    const colorPreview = document.getElementById('colorPreview');
+                                    const baseColorInput = document.getElementById('baseColor');
+
+                                    colorPreview.style.backgroundColor = colors[0];
+                                    colorPreview.textContent = colors[0];
+                                    baseColorInput.value = colors[0];
+                                }
+
+                                loadingOverlay.style.display = 'none';
+                                showToast('Цветовая палитра создана из загруженного изображения');
+                            };
+                        };
+                        reader.readAsDataURL(file);
+                    });
+
+                    // Извлечение доминантных цветов из изображения
+                    function extractDominantColors(imageData, colorCount) {
+                        // Квантование цветов
+                        const colorMap = {};
+                        const step = Math.max(1, Math.floor(imageData.length / 4 / 10000)); // Оптимизация - берем не все пиксели
+
+                        for (let i = 0; i < imageData.length; i += 4 * step) {
+                            // Пропускаем прозрачные пиксели
+                            if (imageData[i + 3] < 128) continue;
+
+                            // Понижаем разрешение цвета для объединения похожих цветов
+                            let r = Math.floor(imageData[i] / 16) * 16;
+                            let g = Math.floor(imageData[i + 1] / 16) * 16;
+                            let b = Math.floor(imageData[i + 2] / 16) * 16;
+
+                            let hex = `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+
+                            colorMap[hex] = (colorMap[hex] || 0) + 1;
+                        }
+
+                        // Сортируем цвета по частоте
+                        let sortedColors = Object.entries(colorMap)
+                            .sort((a, b) => b[1] - a[1])
+                            .map(entry => entry[0]);
+
+                        // Фильтруем цвета, чтобы убрать слишком похожие
+                        let filteredColors = [];
+                        for (let color of sortedColors) {
+                            // Проверяем, является ли этот цвет уникальным на основе цветового расстояния
+                            if (isDistinctColor(color, filteredColors)) {
+                                filteredColors.push(color);
+                            }
+
+                            if (filteredColors.length >= colorCount) break;
+                        }
+
+                        return filteredColors;
+                    }
+
+                    // Проверяет, является ли цвет достаточно отличным от существующих цветов
+                    function isDistinctColor(color, existingColors, threshold = 30) {
+                        for (let existingColor of existingColors) {
+                            if (getColorDistance(color, existingColor) < threshold) {
+                                return false;
+                            }
+                        }
+                        return true;
+                    }
+
+                    // Вычисляет расстояние между двумя цветами в RGB пространстве
+                    function getColorDistance(color1, color2) {
+                        // Преобразуем hex в RGB
+                        let r1 = parseInt(color1.slice(1, 3), 16);
+                        let g1 = parseInt(color1.slice(3, 5), 16);
+                        let b1 = parseInt(color1.slice(5, 7), 16);
+
+                        let r2 = parseInt(color2.slice(1, 3), 16);
+                        let g2 = parseInt(color2.slice(3, 5), 16);
+                        let b2 = parseInt(color2.slice(5, 7), 16);
+
+                        // Евклидово расстояние в RGB пространстве
+                        return Math.sqrt(
+                            Math.pow(r2 - r1, 2) +
+                            Math.pow(g2 - g1, 2) +
+                            Math.pow(b2 - b1, 2)
+                        );
+                    }
+
+                    // Функции для работы с историей палитр
+
+                    // Сохраняет текущую палитру в историю
+                    function savePaletteToHistory() {
+                        if (!currentPalette.length) return;
+
+                        // Получаем существующую историю
+                        let history = getHistoryFromStorage();
+
+                        // Создаем новую запись
+                        const newEntry = {
+                            id: Date.now(),
+                            timestamp: new Date().toLocaleString(),
+                            colors: currentPalette
+                        };
+
+                        // Добавляем в начало истории
+                        history.unshift(newEntry);
+
+                        // Ограничиваем размер истории (хранить последние 10 палитр)
+                        if (history.length > 10) {
+                            history = history.slice(0, 10);
+                        }
+
+                        // Сохраняем обратно в localStorage
+                        localStorage.setItem('colorPaletteHistory', JSON.stringify(history));
+
+                        // Обновляем отображение истории
+                        displayHistory();
+
+                        // Показываем уведомление
+                        showToast('Палитра сохранена в историю!');
+                    }
+
+                    // Загружает историю из localStorage
+                    function getHistoryFromStorage() {
+                        const historyJson = localStorage.getItem('colorPaletteHistory');
+                        return historyJson ? JSON.parse(historyJson) : [];
+                    }
+
+                    // Отображает историю в интерфейсе
+                    function displayHistory() {
+                        const historyContainer = document.getElementById('historyContainer');
+                        const history = getHistoryFromStorage();
+
+                        // Очищаем контейнер
+                        historyContainer.innerHTML = '';
+
+                        if (history.length === 0) {
+                            historyContainer.innerHTML = '<p>История пуста</p>';
+                            return;
+                        }
+
+                        // Добавляем каждую сохраненную палитру
+                        history.forEach(entry => {
+                            const historyItem = document.createElement('div');
+                            historyItem.className = 'history-item';
+                            historyItem.onclick = () => loadPaletteFromHistory(entry);
+
+                            // Добавляем таймштамп
+                            const timestamp = document.createElement('div');
+                            timestamp.className = 'history-timestamp';
+                            timestamp.textContent = entry.timestamp;
+                            historyItem.insertAdjacentElement('beforebegin', timestamp);
+
+                            // Добавляем цвета
+                            entry.colors.forEach(color => {
+                                const colorDiv = document.createElement('div');
+                                colorDiv.className = 'history-color';
+                                colorDiv.style.backgroundColor = color;
+                                historyItem.appendChild(colorDiv);
+                            });
+
+                            historyContainer.appendChild(historyItem);
+                        });
+                    }
+
+                    // Загружает палитру из истории
+                    function loadPaletteFromHistory(historyEntry) {
+                        if (!historyEntry || !historyEntry.colors || !historyEntry.colors.length) return;
+
+                        // Получаем div палитры
+                        const paletteDiv = document.getElementById('palette');
+                        paletteDiv.innerHTML = '';
+
+                        // Добавляем цвета из истории
+                        historyEntry.colors.forEach(color => {
+                            const div = document.createElement('div');
+                            div.className = 'color-box';
+                            div.style.backgroundColor = color;
+                            div.setAttribute('data-color', color);
+
+                            const colorCode = document.createElement('div');
+                            colorCode.className = 'color-code';
+                            colorCode.textContent = color;
+                            div.appendChild(colorCode);
+
+                            const colorActions = document.createElement('div');
+                            colorActions.className = 'color-actions';
+
+                            const copyBtn = document.createElement('div');
+                            copyBtn.className = 'color-action-btn copy-color';
+                            copyBtn.title = 'Копировать цвет';
+                            copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
+
+                            const applyBtn = document.createElement('div');
+                            applyBtn.className = 'color-action-btn apply-color';
+                            applyBtn.title = 'Применить цвет';
+                            applyBtn.innerHTML = '<i class="fas fa-paint-brush"></i>';
+
+                            colorActions.appendChild(copyBtn);
+                            colorActions.appendChild(applyBtn);
+                            div.appendChild(colorActions);
+
+                            paletteDiv.appendChild(div);
+                        });
+
+                        // Инициализируем события для новых цветовых блоков
+                        initColorBoxEvents();
+
+                        // Применяем первый цвет
+                        if (historyEntry.colors.length > 0) {
+                            const firstColor = historyEntry.colors[0];
+                            applyPalette(firstColor);
+
+                            // Обновляем предпросмотр и поле ввода цвета
+                            const colorPreview = document.getElementById('colorPreview');
+                            const baseColorInput = document.getElementById('baseColor');
+
+                            colorPreview.style.backgroundColor = firstColor;
+                            colorPreview.textContent = firstColor;
+                            baseColorInput.value = firstColor;
+                        }
+
+                        showToast('Палитра загружена из истории');
+                    }
+
+                    // Очистка истории
+                    function clearHistory() {
+                        if (confirm('Вы уверены, что хотите очистить всю историю палитр?')) {
+                            localStorage.removeItem('colorPaletteHistory');
+                            displayHistory();
+                            showToast('История очищена');
+                        }
+                    }
+                    function exportToHtml() {
+                        const colors = currentPalette; // Используем текущую палитру
+                        window.location.href = `/Color/ExportToHtml?colors=${encodeURIComponent(colors.join(','))}`;
+                    }
+
+                    function exportToAco() {
+                        const colors = currentPalette; // Используем текущую палитру
+                        window.location.href = `/Color/ExportToAco?colors=${encodeURIComponent(colors.join(','))}`;
+                    }
+
+                    function exportToGpl() {
+                        const colors = currentPalette; // Используем текущую палитру
+                        window.location.href = `/Color/ExportToGpl?colors=${encodeURIComponent(colors.join(','))}`;
+                    }
+                    // Начальная загрузка истории
+                    function loadHistory() {
+                        displayHistory();
+                    }
+
+        </script>
+    </body>
 </html>
