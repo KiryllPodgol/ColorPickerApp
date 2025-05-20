@@ -17,7 +17,7 @@ namespace ColorPickerApp.Services
     public static class ColorService // Ваш класс остается статическим
     {
         // --- Конвертеры Цветов (из PaletteGeneratorService) ---
-
+        
         public static Color HexToRgb(string hexColor)
         {
             hexColor = hexColor.TrimStart('#');
@@ -50,6 +50,16 @@ namespace ColorPickerApp.Services
             }
 
             throw new ArgumentException("Неверный формат HEX строки.", nameof(hexColor));
+        }
+        private static double CalculateContrastRatio(Color color1, Color color2)
+        {
+            double luminance1 = (0.2126 * color1.R + 0.7152 * color1.G + 0.0722 * color1.B) / 255;
+            double luminance2 = (0.2126 * color2.R + 0.7152 * color2.G + 0.0722 * color2.B) / 255;
+            return (Math.Max(luminance1, luminance2) + 0.05) / (Math.Min(luminance1, luminance2) + 0.05);
+        }
+        private static double CalculateLuminance(Color color)
+        {
+            return (0.2126 * color.R + 0.7152 * color.G + 0.0722 * color.B) / 255.0;
         }
 
         public static string RgbToHex(Color color, bool includeAlpha = false)
@@ -237,9 +247,45 @@ namespace ColorPickerApp.Services
             tetradic.Add(RgbToHex(HslToRgb(tetradicSqr3)));
             allPalettes["tetradic (square)"] = tetradic.Distinct().ToList();
 
+            var websitePalette = new List<string> { internalBaseHex };
+
+            
+            
+            HslColor accentHsl = baseHsl;
+            accentHsl.H = (baseHsl.H + 20) % 360;
+            accentHsl.S = Math.Clamp(baseHsl.S * 1.3, 0.6, 1.0); 
+            accentHsl.L = Math.Clamp(baseHsl.L * 0.8, 0.35, 0.5); // Потемнее — для кнопки
+            websitePalette.Add(RgbToHex(HslToRgb(accentHsl)));
+
+            // 3. Фоновый цвет — светлый, но читаемый
+            HslColor bgHsl = baseHsl;
+            bgHsl.S = Math.Clamp(baseHsl.S * 0.1, 0.15, 0.25); // Немного цвета
+            bgHsl.L = Math.Clamp(baseHsl.L + 0.8, 0.35, 0.5); // для кнопок
+            websitePalette.Add(RgbToHex(HslToRgb(bgHsl)));
+
+
+            Color bgRgb = HslToRgb(bgHsl);
+            double bgLuminance = CalculateLuminance(bgRgb);
+
+            Color textColor = bgLuminance > 0.5 ? Color.FromArgb(20, 20, 20) : Color.FromArgb(240, 240, 240);
+            websitePalette.Add(RgbToHex(textColor));
+
+
+            HslColor contrastHsl = baseHsl;
+            contrastHsl.H = (baseHsl.H + 180) % 360;
+            contrastHsl.S = Math.Clamp(baseHsl.S * 1.4, 0.7, 1.0); // Яркий!
+            contrastHsl.L = 0.45; // Строго читаемый цвет для кнопки
+            websitePalette.Add(RgbToHex(HslToRgb(contrastHsl)));
+
+            // Готово
+            allPalettes["websitePalette"] = websitePalette.Distinct().ToList();
+
+
+
+
             // Генерация цветов текста (черный/белый для контраста)
             var textColors = new Dictionary<string, string>();
-            foreach (var paletteKvp in allPalettes.ToList()) // ToList(), чтобы можно было изменять allPalettes, если нужно
+            foreach (var paletteKvp in allPalettes.ToList())
             {
                 foreach (var colorHex in paletteKvp.Value)
                 {
@@ -247,14 +293,14 @@ namespace ColorPickerApp.Services
                     {
                         try
                         {
-                            Color bgColor = HexToRgb(colorHex);
-                            double luminance = (0.299 * bgColor.R + 0.587 * bgColor.G + 0.114 * bgColor.B) / 255.0;
+                            Color backgroundColor = HexToRgb(colorHex); // Изменили имя переменной
+                            double luminance = (0.299 * backgroundColor.R + 0.587 * backgroundColor.G + 0.114 * backgroundColor.B) / 255.0;
                             textColors[colorHex] = luminance > 0.5 ? "#000000" : "#FFFFFF";
                         }
                         catch (ArgumentException ex)
                         {
                             Console.WriteLine($"Ошибка парсинга HEX для текстового цвета: {ex.Message} для {colorHex}");
-                            textColors[colorHex] = "#000000"; // По умолчанию черный
+                            textColors[colorHex] = "#000000";
                         }
                     }
                 }
@@ -262,13 +308,11 @@ namespace ColorPickerApp.Services
 
             allPalettes["textContrast"] = textColors.Select(kvp => $"{kvp.Key}:{kvp.Value}").ToList();
 
-
             return allPalettes;
         }
 
 
-
-        public static string AdjustBrightness(string hex, int percent)
+            public static string AdjustBrightness(string hex, int percent)
         {
             string internalHex = hex.StartsWith("#") ? hex : "#" + hex;
             Color rgbColor;

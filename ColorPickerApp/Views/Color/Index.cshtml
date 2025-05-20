@@ -11,7 +11,7 @@
         <style>
                     :root {
                         --primary-color: #3498db;
-                        --secondary-color: #2ecc71;
+                        --secondary-color: #3445DB;
                         --accent-color: #e74c3c;
                         --background-color: #f5f5f5;
                         --text-color: #333333;
@@ -467,7 +467,10 @@
                             <label for="baseColor">Hex-код выбранного цвета:</label>
                             <input type="text" id="baseColor" name="baseColor" value="@(Model[0])" readonly />
                         </div>
-                        <button type="submit">Сгенерировать палитру</button>
+                    <button type="button" id="generatePaletteButton">Сгенерировать палитру</button>
+                    <button type="button" id="generateMonochromPaletteButton">Монохромная палитра</button>
+                    <button type="button" id="generateWebsiteButton">Дезайнерская палитра</button>
+                    <button type="button" id="resetPaletteButton">Сброс</button>
                     </form>
                 </div>
 
@@ -559,7 +562,7 @@
                                 <div class="preview-main">
                                     <div class="preview-content">
                                         <h3>Содержание страницы</h3>
-                                        <p>Это пример содержания вашей веб-страницы с выбранной цветовой схемой.</p>
+                                        <p>Это пример содержания веб-страницы с выбранной цветовой схемой.</p>
                                         <button class="preview-button">Кнопка действия</button>
                                     </div>
                                 </div>
@@ -570,7 +573,7 @@
             </main>
 
             <footer>
-                <p>&copy; 2025 Генератор цветовой палитры</p>
+            <p>&copy; @DateTime.Now.Year Генератор цветовой палитры</p>
             </footer>
         </div>
 
@@ -593,6 +596,7 @@
                 initColorBoxEvents();
                 initTargetSelector();
 
+            generatePaletteButton.addEventListener('click', function () {
                 const baseColor = document.getElementById('baseColor').value;
                 fetch(`/api/palette/generate?baseColor=${encodeURIComponent(baseColor)}`)
                     .then(response => {
@@ -601,16 +605,66 @@
                     })
                     .then(data => {
                         if (data.complementary) {
-                        updatePalette(data.complementary);
+                            updatePalette(data.complementary);
                             applyPalette(data.complementary[0]);
-                       
+                           
                         }
                     })
                     .catch(error => {
-                        console.error('Ошибка при начальной загрузке:', error);
-                        showToast('Не удалось загрузить начальную палитру');
+                        console.error('Ошибка при загрузке:', error);
+                        showToast('Не удалось сгенерировать палитру');
                     });
             });
+        });
+        generateMonochromPaletteButton.addEventListener('click', function () {
+            const baseColor = document.getElementById('baseColor').value;
+            fetch(`/api/palette/generate?baseColor=${encodeURIComponent(baseColor)}`)
+                .then(response => {
+                    if (!response.ok) throw new Error('Ошибка инициализации');
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.monochromatic) {
+                        updatePalette(data.monochromatic);
+                        applyPalette(data.monochromatic[0]);
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка при загрузке:', error);
+                    showToast('Не удалось сгенерировать палитру');
+                });
+        });
+        // проблема тут 
+        generateWebsiteButton.addEventListener('click', function () {
+            const baseColor = document.getElementById('baseColor').value;
+            fetch(`/api/palette/generate?baseColor=${encodeURIComponent(baseColor)}`)
+                .then(response => {
+                    if (!response.ok) throw new Error('Ошибка инициализации');
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.websitePalette) {  // Изменили с websitePalette на website
+                        updatePalette(data.websitePalette);
+                        applyPalette(data.websitePalette[0]);
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка при загрузке:', error);
+                    showToast('Не удалось сгенерировать палитру');
+                });
+        });
+
+        document.getElementById('resetPaletteButton').addEventListener('click', function () {
+            
+            const defaultColors = ['#3498db', '#3445DB', '#34DBCA', '#8BC4EA', '#196090'];
+            updatePalette(defaultColors);
+            applyPalette(defaultColors[0]);
+            document.getElementById('baseColor').value = defaultColors[0];
+            document.getElementById('colorPreview').style.backgroundColor = defaultColors[0];
+            document.getElementById('colorPreview').textContent = defaultColors[0];
+
+            showToast('Палитра сброшена');
+        });
             function updatePalette(colors) {
                 const paletteContainer = document.getElementById('palette');
                 paletteContainer.innerHTML = '';
