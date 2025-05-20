@@ -72,7 +72,13 @@ namespace ColorPickerApp.Controllers
             }
             return Ok(palettes);
         }
-
+        [HttpGet("api/palette/independent")]
+        [Produces("application/json")]
+        public ActionResult<List<string>> GenerateIndependentPaletteApi()
+        {
+            var palette = ColorService.GenerateIndependentPalette();
+            return Ok(palette);
+        }
         private bool IsValidHex(string hex)
         {
             if (string.IsNullOrWhiteSpace(hex)) return false;

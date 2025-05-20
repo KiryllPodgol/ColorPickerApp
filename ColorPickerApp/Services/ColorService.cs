@@ -144,7 +144,47 @@ namespace ColorPickerApp.Services
                 (int)Math.Clamp(Math.Round(b * 255), 0, 255)
             );
         }
+        public static List<string> GenerateIndependentPalette(int colorCount = 5)
+        {
+            var palette = new List<string>();
+            var random = new Random();
 
+            // 1. Генерируем случайный базовый цвет
+            HslColor baseHsl = new HslColor
+            {
+                H = random.Next(0, 360),  // Случайный оттенок (0-360)
+                S = random.NextDouble() * 0.5 + 0.3,  // Насыщенность (0.3-0.8)
+                L = random.NextDouble() * 0.3 + 0.4,  // Светлота (0.4-0.7)
+                A = 1.0
+            };
+
+            // 2. Добавляем его в палитру
+            palette.Add(RgbToHex(HslToRgb(baseHsl)));
+
+            // 3. Генерируем дополнительные цвета на основе HSL-правил
+            for (int i = 1; i < colorCount; i++)
+            {
+                HslColor variant = baseHsl;
+
+                // Вариант 1: Аналоговый цвет (+30 градусов)
+                if (i % 2 == 0)
+                {
+                    variant.H = (baseHsl.H + 30 * i) % 360;
+                    variant.S = Math.Clamp(baseHsl.S * 1.1, 0.2, 0.9);
+                }
+                // Вариант 2: Контрастный (светлее/темнее)
+                else
+                {
+                    variant.L = (i % 3 == 0)
+                        ? Math.Clamp(baseHsl.L + 0.2, 0.2, 0.8)
+                        : Math.Clamp(baseHsl.L - 0.15, 0.2, 0.8);
+                }
+
+                palette.Add(RgbToHex(HslToRgb(variant)));
+            }
+
+            return palette;
+        }
         public static List<string> GenerateSimplePalette(string baseHexColor)
         {
             var palette = new List<string>();

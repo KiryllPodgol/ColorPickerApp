@@ -469,7 +469,8 @@
                         </div>
                     <button type="button" id="generatePaletteButton">Сгенерировать палитру</button>
                     <button type="button" id="generateMonochromPaletteButton">Монохромная палитра</button>
-                    <button type="button" id="generateWebsiteButton">Дезайнерская палитра</button>
+                    <button type="button" id="generateWebsiteButton">Дизайнерская палитра</button>
+                    <button type="button" id="generateIndependentButton">Рандомная палитра</button>
                     <button type="button" id="resetPaletteButton">Сброс</button>
                     </form>
                 </div>
@@ -539,7 +540,9 @@
                     <p>Загрузите изображение, чтобы извлечь из него цветовую палитру</p>
                     <div class="form-group">
                         <input type="file" id="imageUpload" accept="image/*">
+                    <button type="button" id="imageClearButton">Очистить</button> 
                     </div>
+                    
                     <canvas id="canvas" style="display:none;"></canvas>
                 </div>
 
@@ -653,17 +656,33 @@
                     showToast('Не удалось сгенерировать палитру');
                 });
         });
+        document.getElementById('generateIndependentButton').addEventListener('click', function () {
+            fetch('/api/palette/independent')
+                .then(response => response.json())
+                .then(palette => {
+                    updatePalette(palette);  
+                    document.getElementById('baseColor').value = palette[0];
+                })
+                .catch(error => console.error("Ошибка:", error));
+        });
+        document.getElementById('resetPaletteButton').addEventListener('click', resetPalette);
 
-        document.getElementById('resetPaletteButton').addEventListener('click', function () {
-            
+        function resetPalette() {
             const defaultColors = ['#3498db', '#3445DB', '#34DBCA', '#8BC4EA', '#196090'];
             updatePalette(defaultColors);
             applyPalette(defaultColors[0]);
             document.getElementById('baseColor').value = defaultColors[0];
             document.getElementById('colorPreview').style.backgroundColor = defaultColors[0];
             document.getElementById('colorPreview').textContent = defaultColors[0];
-
             showToast('Палитра сброшена');
+        }
+
+
+        document.getElementById('imageClearButton').addEventListener('click', function () {
+            document.getElementById('imageUpload').value = '';
+            resetPalette();
+
+            showToast('Изображение и палитра сброшены');
         });
             function updatePalette(colors) {
                 const paletteContainer = document.getElementById('palette');
