@@ -674,6 +674,9 @@
             document.getElementById('baseColor').value = defaultColors[0];
             document.getElementById('colorPreview').style.backgroundColor = defaultColors[0];
             document.getElementById('colorPreview').textContent = defaultColors[0];
+            const colorSelector = document.getElementById('colorSelector');
+            colorSelector.style.left = '50%';
+            colorSelector.style.top = '50%';
             showToast('Палитра сброшена');
         }
 
