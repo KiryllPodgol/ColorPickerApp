@@ -190,29 +190,28 @@ namespace ColorPickerApp.Services
             var palette = new List<string>();
             if (string.IsNullOrEmpty(baseHexColor)) return palette; // Возвращаем пустую палитру, если нет базового цвета
 
-            // Убедимся, что HEX всегда с # для внутренних операций
             string internalBaseHex = baseHexColor.StartsWith("#") ? baseHexColor : "#" + baseHexColor;
-            palette.Add(internalBaseHex); // Добавляем исходный цвет
+            palette.Add(internalBaseHex); 
 
             try
             {
-                // Аналогичные цвета (как в вашем старом AdjustHue)
+                
                 palette.Add(AdjustHue(internalBaseHex, 30));
                 palette.Add(AdjustHue(internalBaseHex, -30));
 
-                // Оттенки основного цвета (как в вашем старом AdjustBrightness)
-                palette.Add(AdjustBrightness(internalBaseHex, 20)); // Уменьшил процент для более тонких оттенков
+           
+                palette.Add(AdjustBrightness(internalBaseHex, 20));
                 palette.Add(AdjustBrightness(internalBaseHex, -20));
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Ошибка при генерации простой палитры для {internalBaseHex}: {ex.Message}");
-                // В случае ошибки, возвращаем только базовый цвет, который уже добавлен
+                
             }
-            return palette.Distinct().ToList(); // Убираем дубликаты
+            return palette.Distinct().ToList(); 
         }
 
-        // Основной метод для генерации всех типов палитр
+       
         public static Dictionary<string, List<string>> GenerateAllHarmonies(string baseHexColor)
         {
             var allPalettes = new Dictionary<string, List<string>>();
@@ -224,8 +223,8 @@ namespace ColorPickerApp.Services
             try
             {
                 baseRgb = HexToRgb(internalBaseHex);
-                baseHsl = RgbToHsl(baseRgb); // Используем новый RgbToHsl
-                baseHsl.A = 1.0; // Убедимся, что альфа = 1 для генерации непрозрачных палитр
+                baseHsl = RgbToHsl(baseRgb); 
+                baseHsl.A = 1.0; 
             }
             catch (ArgumentException ex)
             {

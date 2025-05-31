@@ -7,6 +7,7 @@ builder.Services.AddControllersWithViews();
 
 // Регистрируем сервисы
 builder.Services.AddScoped<ExportService>(); // Добавьте эту строку
+builder.Services.AddScoped<ImportService>();
 
 var app = builder.Build();
 

@@ -472,6 +472,7 @@
                     <button type="button" id="generateWebsiteButton">Дизайнерская палитра</button>
                     <button type="button" id="generateIndependentButton">Рандомная палитра</button>
                     <button type="button" id="resetPaletteButton">Сброс</button>
+                    <button type="button" id="ImportPaletteButton">Импорт</button>
                     </form>
                 </div>
 
@@ -1485,24 +1486,117 @@
                             showToast('История очищена');
                         }
                     }
-                    function exportToHtml() {
-                        const colors = currentPalette; // Используем текущую палитру
-                        window.location.href = `/Color/ExportToHtml?colors=${encodeURIComponent(colors.join(','))}`;
-                    }
+        function exportToHtml() {
+            const colors = currentPalette;
+            window.location.href = `/Color/ExportToHtml?colors=${encodeURIComponent(colors.join('.'))}`;
+        }
 
-                    function exportToAco() {
-                        const colors = currentPalette; // Используем текущую палитру
-                        window.location.href = `/Color/ExportToAco?colors=${encodeURIComponent(colors.join(','))}`;
-                    }
+        function exportToAco() {
+            const colors = currentPalette;
+            window.location.href = `/Color/ExportToAco?colors=${encodeURIComponent(colors.join('.'))}`;
+        }
 
-                    function exportToGpl() {
-                        const colors = currentPalette; // Используем текущую палитру
-                        window.location.href = `/Color/ExportToGpl?colors=${encodeURIComponent(colors.join(','))}`;
-                    }
-                    // Начальная загрузка истории
+        function exportToGpl() {
+            const colors = currentPalette;
+            window.location.href = `/Color/ExportToGpl?colors=${encodeURIComponent(colors.join('.'))}`;
+        }
+                    
                     function loadHistory() {
                         displayHistory();
                     }
+
+
+        document.getElementById('ImportPaletteButton').addEventListener('click', importPalette);
+
+        async function importPalette() {
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = '.html,.htm,.aco,.gpl,.css';
+
+            fileInput.onchange = async () => {
+                const file = fileInput.files[0];
+                if (!file) return;
+
+                const formData = new FormData();
+                formData.append('file', file);
+
+                try {
+                    const response = await fetch('/api/palette/import', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const paletteDiv = document.getElementById('palette');
+                    paletteDiv.innerHTML = ''; 
+
+                    if (!response.ok) {
+                        const error = await response.json().catch(() => ({ message: 'Не удалось прочитать ответ сервера.' }));
+                        console.error('Ошибка сервера:', error);
+                        paletteDiv.innerHTML = `<p style="color:red;">Ошибка: ${error.message}</p>`;
+                        return;
+                    }
+
+                    const colors = await response.json();
+
+                  
+                    colors.forEach(color => {
+                        const div = document.createElement("div");
+                        div.className = "color-box";
+                        div.style.backgroundColor = color;
+                        div.setAttribute('data-color', color);
+
+                        const colorCode = document.createElement("div");
+                        colorCode.className = "color-code";
+                        colorCode.textContent = color;
+                        div.appendChild(colorCode);
+
+                        const colorActions = document.createElement("div");
+                        colorActions.className = "color-actions";
+
+                        const copyBtn = document.createElement("div");
+                        copyBtn.className = "color-action-btn copy-color";
+                        copyBtn.title = "Копировать цвет";
+                        copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
+
+                        const applyBtn = document.createElement("div");
+                        applyBtn.className = "color-action-btn apply-color";
+                        applyBtn.title = "Применить цвет";
+                        applyBtn.innerHTML = '<i class="fas fa-paint-brush"></i>';
+
+                        colorActions.appendChild(copyBtn);
+                        colorActions.appendChild(applyBtn);
+                        div.appendChild(colorActions);
+
+                        paletteDiv.appendChild(div);
+                    });
+
+                   
+                    initColorBoxEvents();
+
+                    
+                    if (colors.length > 0) {
+                        applyPalette(colors[0]);
+
+                        
+                        const colorPreview = document.getElementById('colorPreview');
+                        const baseColorInput = document.getElementById('baseColor');
+
+                        colorPreview.style.backgroundColor = colors[0];
+                        colorPreview.textContent = colors[0];
+                        baseColorInput.value = colors[0];
+                    }
+
+                    showToast('Палитра успешно импортирована');
+
+                } catch (error) {
+                    console.error('Ошибка при импорте палитры:', error);
+                    const paletteDiv = document.getElementById('palette');
+                    paletteDiv.innerHTML = `<p style="color:red;">Ошибка: ${error.message}</p>`;
+                }
+            };
+
+            fileInput.click();
+        }
 
         </script>
     </body>

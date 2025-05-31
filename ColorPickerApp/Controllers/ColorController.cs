@@ -10,11 +10,12 @@ namespace ColorPickerApp.Controllers
     public class ColorController : Controller
     {
         private readonly ExportService _colorExportService;
-        // PaletteGeneratorService больше не нужен, так как ColorService статический
-
-        public ColorController(ExportService colorExportService) // Внедряем только ExportService
+       
+        private readonly ImportService _importService;
+        public ColorController(ExportService colorExportService, ImportService importService)
         {
             _colorExportService = colorExportService;
+            _importService = importService;
         }
 
         public IActionResult Index(string baseColor = "#3498db")
@@ -22,18 +23,14 @@ namespace ColorPickerApp.Controllers
             string validatedBaseColor = baseColor;
             if (string.IsNullOrEmpty(validatedBaseColor) || !IsValidHex(validatedBaseColor))
             {
-                validatedBaseColor = "#3498db"; // Цвет по умолчанию, если передан неверный
+                validatedBaseColor = "#3498db";
             }
-            // Убедимся, что HEX всегда с # для ViewBag и для сервиса
+            
             if (!validatedBaseColor.StartsWith("#"))
             {
                 validatedBaseColor = "#" + validatedBaseColor;
             }
-            ViewBag.BaseColor = validatedBaseColor; // Передаем в ViewBag для использования в input
-
-            // Генерируем простую палитру для первоначального отображения
-            // JavaScript затем загрузит полный набор через API
-            // Используем статический метод из ColorService
+            ViewBag.BaseColor = validatedBaseColor; 
             List<string> initialPalette = ColorService.GenerateSimplePalette(validatedBaseColor);
             return View(initialPalette);
         }
@@ -57,17 +54,17 @@ namespace ColorPickerApp.Controllers
                 return BadRequest(new { message = "Неверный или отсутствующий параметр baseColor. Ожидается HEX формат (например, #RRGGBB или RRGGBB)." });
             }
 
-            // Убедимся, что HEX всегда с # для сервиса
+            
             if (!decodedBaseColor.StartsWith("#"))
             {
                 decodedBaseColor = "#" + decodedBaseColor;
             }
 
-            // Используем статический метод из ColorService
+          
             var palettes = ColorService.GenerateAllHarmonies(decodedBaseColor);
             if (palettes.ContainsKey("error"))
             {
-                // Отправляем ошибку, если сервис ее вернул
+                
                 return BadRequest(new { message = palettes["error"].FirstOrDefault() ?? "Неизвестная ошибка генерации палитры." });
             }
             return Ok(palettes);
@@ -88,9 +85,9 @@ namespace ColorPickerApp.Controllers
         public IActionResult ExportToHtml([FromQuery] string colors)
         {
             if (string.IsNullOrEmpty(colors)) return BadRequest("Нет цветов для экспорта.");
-            // Декодируем каждый цвет и добавляем #, если отсутствует
+            
             var colorArray = colors.Split(',')
-                                   .Select(c => WebUtility.UrlDecode(c)) // Декодируем каждый цвет
+                                   .Select(c => WebUtility.UrlDecode(c)) 
                                    .Select(c => c.Trim())
                                    .Select(c => c.StartsWith("#") ? c : "#" + c)
                                    .ToArray();
@@ -121,6 +118,82 @@ namespace ColorPickerApp.Controllers
             var fileContent = _colorExportService.ExportToGpl(colorArray);
             return File(fileContent, "text/plain", "palette.gpl");
         }
+
+        [HttpPost("api/palette/import")]
+        [Produces("application/json")]
+        public async Task<ActionResult<List<string>>> ImportPalette(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest(new { message = "Файл не выбран или пуст." });
+            }
+
+            if (file.Length > 5 * 1024 * 1024) // 5MB limit
+            {
+                return BadRequest(new { message = "Файл слишком большой. Максимальный размер - 5MB." });
+            }
+
+            var fileExtension = Path.GetExtension(file.FileName?.ToLowerInvariant() ?? "");
+            if (string.IsNullOrEmpty(fileExtension))
+            {
+                return BadRequest(new { message = "Не удалось определить тип файла." });
+            }
+
+            try
+            {
+                using (var stream = new MemoryStream())
+                {
+                    await file.CopyToAsync(stream);
+                    stream.Position = 0;
+
+                    List<string> colors;
+                    switch (fileExtension)
+                    {
+                        case ".html":
+                        case ".htm":
+                            colors = _importService.ImportFromHtml(stream);
+                            break;
+                        case ".gpl":
+                            colors = _importService.ImportFromGimp(stream);
+                            break;
+                        case ".aco":
+                            colors = _importService.ImportFromAco(stream);
+                            break;
+                        case ".css":
+                            colors = _importService.ImportFromCss(stream);
+                            break;
+                        default:
+                            return BadRequest(new { message = $"Формат {fileExtension} не поддерживается для импорта." });
+                    }
+
+                    if (colors == null || colors.Count == 0)
+                    {
+                        return NotFound(new { message = "Не удалось извлечь цвета из файла или файл не содержит поддерживаемых цветов." });
+                    }
+
+                    var formattedColors = colors
+                        .Select(c => c.Trim())
+                        .Where(c => !string.IsNullOrEmpty(c))
+                        .Select(c => c.StartsWith("#") ? c : "#" + c)
+                        .Where(IsValidHex)
+                        .Distinct()
+                        .ToList();
+
+                    if (formattedColors.Count == 0)
+                    {
+                        return NotFound(new { message = "Извлеченные данные не содержат допустимых HEX цветов." });
+                    }
+
+                    return Ok(formattedColors);
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = $"Ошибка при обработке файла: {ex.Message}" });
+            }
+        }
+
     }
+  
 }
 
